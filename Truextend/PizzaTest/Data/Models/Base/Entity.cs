@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Truextend.PizzaTest.Data
+namespace Truextend.PizzaTest.Data.Models.Base
 {
-    internal class Class1
+    public class Entity
     {
+        public Guid Id { get; set; }
     }
 }
