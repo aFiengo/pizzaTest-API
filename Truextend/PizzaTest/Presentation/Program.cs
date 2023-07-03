@@ -1,6 +1,57 @@
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder => builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+            .WithExposedHeaders("Authorization")
+    );
+});
+builder.Services.AddDbContext<PizzaDbContext>(options =>
+{
+    options.UseMySQL(builder.Configuration.GetConnectionString("PizzaContextDb"));
+});
+//insert managers
+
+//
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc(name: "v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "PizzeriaAPI", Version = "v1" });
+});
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseCors("AllowAnyOrigin");
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
+    });
+}
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
