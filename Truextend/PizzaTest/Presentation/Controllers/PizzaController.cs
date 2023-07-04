@@ -2,25 +2,33 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
+using Truextend.PizzaTest.Presentation.Controllers.Base;
+using Truextend.PizzaTest.Presentation.Middleware;
 
 namespace Truextend.PizzaTest.Presentation.Controllers
 {
     [Produces("application/json")]
     [Route("api/pizzas")]
-    public class PizzaController : Controller
+    public class PizzaController : BasePizzaTestController<PizzaDTO>
     {
         private readonly IPizzaManager _pizzaManager;
-        public PizzaController(IPizzaManager pizzaManager)
+        public PizzaController(IPizzaManager pizzaManager) : base(pizzaManager)
         {
-            _pizzaManager= pizzaManager;
+            _pizzaManager = pizzaManager;
         }
 
-
-        [HttpGet]
-        [Route("")]
-        public async Task<ActionResult> GetAllPizzasAsync()
+        [HttpPost("{pizzaId}/toppings/{toppingId}")]
+        public async Task<IActionResult> AddToppingToPizzaAsync([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
-            IEnumerable<PizzaDTO> pizzaDto = await _pizzaManager.GetAllAsync();
+            PizzaDTO updatedPizza = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
+            return Ok(new MiddlewareResponse<PizzaDTO>(updatedPizza));
+        }
+
+        [HttpGet("{id}/toppings")]
+        public async Task<IActionResult> GetToppingsForPizzaAsync([FromRoute] Guid id)
+        {
+            var toppings = await _pizzaManager.GetToppingsForPizzaAsync(id);
+            return Ok(new MiddlewareResponse<IEnumerable<ToppingDTO>>(toppings));
         }
     }
 }

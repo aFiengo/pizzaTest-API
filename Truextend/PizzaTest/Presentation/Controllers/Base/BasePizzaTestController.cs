@@ -8,9 +8,9 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
     public class BasePizzaTestController<T> : ControllerBase where T : class
     {
         private readonly IGenericManager<T> _classManager;
-        public BasePizzaTestController(IGenericManager<T> classManager) 
+        public BasePizzaTestController(IGenericManager<T> ClassManager) 
         {
-            _classManager = classManager;
+            _classManager = ClassManager;
         }
 
         [HttpGet]

@@ -9,7 +9,7 @@ using Truextend.PizzaTest.Logic.Managers.Base;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using AutoMapper;
 using Truextend.PizzaTest.Logic.Models;
-using Truextend.PizzaTest.Core.Exceptions;
+using Truextend.PizzaTest.Logic.Exceptions;
 
 namespace Truextend.PizzaTest.Logic.Managers
 {
