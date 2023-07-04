@@ -9,10 +9,10 @@ using Truextend.PizzaTest.Data.Models;
 
 namespace Truextend.PizzaTest.Data
 {
-    public class PizzaDBContext : DbContext
+    public class PizzaDbContext : DbContext
     {
         private readonly IConfiguration _config;
-        public PizzaDBContext(IConfiguration config)
+        public PizzaDbContext(IConfiguration config)
         {
             _config = config;
         }
@@ -57,16 +57,6 @@ namespace Truextend.PizzaTest.Data
                 .HasOne(pt => pt.Topping)
                 .WithMany()
                 .HasForeignKey(pt => pt.ToppingId);
-
-            modelBuilder.Entity<OrderInfo>()
-                .HasOne(o => o.Pizza)
-                .WithOne()
-                .HasForeignKey<OrderInfo>(o => o.PizzaId);
-
-            modelBuilder.Entity<OrderInfo>()
-                .HasOne(o => o.Topping)
-                .WithMany()
-                .HasForeignKey(o => o.ToppingId);
 
             modelBuilder.Entity<Topping>()
                 .HasMany(t => t.PizzaToppings)

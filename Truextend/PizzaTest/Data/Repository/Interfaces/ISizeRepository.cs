@@ -10,5 +10,6 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
 {
     public interface ISizeRepository : IRepository<Size>
     {
+        public Task<IEnumerable<Size>> GetAllSizesAsync();
     }
 }

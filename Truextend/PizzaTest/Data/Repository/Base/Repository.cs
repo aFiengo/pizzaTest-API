@@ -45,9 +45,13 @@ namespace Truextend.PizzaTest.Data.Repository.Base
         {
             return await dbContext.Set<T>().Where(predicate).ToListAsync();
         }
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             T value = await dbContext.Set<T>().FindAsync(id);
+            if (value == null)
+            {
+                throw new DatabaseException($"Entity of type {typeof(T).Name} with id {id} not found.");
+            }
             return value;
         }
         public async Task<T> UpdateAsync(T entity)

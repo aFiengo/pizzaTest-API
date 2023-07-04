@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Truextend.PizzaTest.Data.Models.Validation
 {
-    public class IValidatable
+    public interface IValidatable
     {
-        public interface IValidatable
-        {
-            bool IsValid();
-
-            IEnumerable<ValidationError> GetErrors();
-        }
+        bool IsValid();
+        IEnumerable<ValidationError> GetErrors();
     }
 }
