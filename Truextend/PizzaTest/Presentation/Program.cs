@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Truextend.PizzaTest.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
