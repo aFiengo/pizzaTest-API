@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Truextend.PizzaTest.Data.Models.Validation;
 
-namespace Truextend.PizzaTest.Core.Exceptions
+namespace Truextend.PizzaTest.Logic.Exceptions
 {
     public class BadRequestException : Exception
     {

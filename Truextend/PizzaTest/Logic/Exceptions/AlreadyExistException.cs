@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Truextend.PizzaTest.Core.Exceptions
+namespace Truextend.PizzaTest.Logic.Exceptions
 {
     public class AlreadyExistException : Exception
     {
