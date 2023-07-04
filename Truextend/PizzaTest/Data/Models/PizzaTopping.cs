@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Truextend.PizzaTest.Data.Models
 {
-    public class PizzaToppings
+    public class PizzaTopping 
     {
         public Guid PizzaId { get; set; }
         public Guid ToppingId { get; set; }

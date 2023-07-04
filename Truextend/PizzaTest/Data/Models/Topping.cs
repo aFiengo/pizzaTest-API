@@ -10,7 +10,7 @@ namespace Truextend.PizzaTest.Data.Models
     public class Topping : Entity
     {
         public string Name { get; set; }
-        public List<PizzaToppings> PizzaToppings { get; set; }
+        public List<PizzaTopping> PizzaToppings { get; set; }
         public ToppingPrice ToppingPrice { get; set; }
         public OrderInfo OrderInfo { get; set; }
 

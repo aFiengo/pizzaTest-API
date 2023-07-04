@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Truextend.PizzaTest.Data
+namespace Truextend.PizzaTest.Data.Repository
 {
-    internal class Class1
+    public class IPizzaRepository
     {
     }
 }
