@@ -19,7 +19,7 @@ namespace Truextend.PizzaTest.Configuration
         {
             return new DatabaseConnectionString()
             {
-                DATABASE = _configuration.GetSection("ConnectionStrings").GetSection("PizzaDB").Value
+                DATABASE = _configuration.GetSection("ConnectionStrings").GetSection("PizzaDbConnection").Value
             };
         }
     }

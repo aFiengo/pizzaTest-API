@@ -6,6 +6,8 @@ using Truextend.PizzaTest.Data;
 using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Models;
 using Truextend.PizzaTest.Logic;
+using Truextend.PizzaTest.Logic.Managers.Interface;
+using Truextend.PizzaTest.Logic.Managers.Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +27,8 @@ builder.Services.AddDbContext<PizzaDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("PizzaContextDb"));
 });
 //insert managers
-builder.Services.AddTransient<PizzaManager>();
-builder.Services.AddTransient<ToppingManager>();
+builder.Services.AddTransient<IPizzaManager, PizzaManager>();
+builder.Services.AddTransient<IGenericManager<ToppingDTO>, ToppingManager>();
 //
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

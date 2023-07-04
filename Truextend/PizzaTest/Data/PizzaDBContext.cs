@@ -21,12 +21,11 @@ namespace Truextend.PizzaTest.Data
         public DbSet<PizzaTopping> PizzaTopping { get; set; }
         public DbSet<Size> Size { get; set; }
         public DbSet<Topping> Topping { get; set; }
-        public DbSet<ToppingPrice> ToppingPrice { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("PizzeriaDB"));
+            optionsBuilder.UseMySQL(_config["ConnectionStrings:PizzaDbConnection"]);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
@@ -58,23 +57,24 @@ namespace Truextend.PizzaTest.Data
                 .WithMany()
                 .HasForeignKey(pt => pt.ToppingId);
 
+            modelBuilder.Entity<PizzaPrice>()
+                .HasKey(pp => new { pp.PizzaId, pp.SizeId }); 
+
+            modelBuilder.Entity<PizzaPrice>()
+                .HasOne(pp => pp.Pizza)
+                .WithMany(p => p.PizzaPrices)
+                .HasForeignKey(pp => pp.PizzaId);
+
+            modelBuilder.Entity<PizzaPrice>()
+                .HasOne(pp => pp.Size)
+                .WithMany(s => s.PizzaPrices)
+                .HasForeignKey(pp => pp.SizeId);
+
             modelBuilder.Entity<Topping>()
                 .HasMany(t => t.PizzaToppings)
                 .WithOne(pt => pt.Topping)
                 .HasForeignKey(pt => pt.ToppingId);
 
-            modelBuilder.Entity<Topping>()
-                .HasOne(t => t.ToppingPrice)
-                .WithOne()
-                .HasForeignKey<Topping>(t => t.ToppingPrice);
-
-            modelBuilder.Entity<ToppingPrice>()
-                .HasKey(tp => tp.ToppingId);
-
-            modelBuilder.Entity<ToppingPrice>()
-                .HasOne(tp => tp.Topping)
-                .WithOne()
-                .HasForeignKey<ToppingPrice>(tp => tp.ToppingId);
         }
     }
 }
