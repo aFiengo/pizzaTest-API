@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Truextend.PizzaTest.Data.Models;
+using Truextend.PizzaTest.Logic.Models;
 
 namespace Truextend.PizzaTest.Logic.Managers.Interface
 {
     public interface IPizzaManager
     {
-        Task<IEnumerable<Pizza>> GetAllAsync();
-        Task<Pizza> GetByIdAsync(Guid id);
-        Task<Pizza> CreateAsync(Pizza pizzaToAdd);
-        Task<Pizza> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
-        Task<IEnumerable<Topping>> GetToppingsForPizzaAsync(Guid pizzaId);
-        Task<Pizza> UpdateAsync(Guid id, Pizza pizzaToUpdate);
+        Task<IEnumerable<PizzaDTO>> GetAllAsync();
+        Task<PizzaDTO> GetByIdAsync(Guid id);
+        Task<PizzaDTO> CreateAsync(PizzaDTO pizzaToAdd);
+        Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
+        Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId);
+        Task<PizzaDTO> UpdateAsync(Guid id, PizzaDTO pizzaToUpdate);
         Task<bool> DeleteAsync(Guid id);
     }
 }
