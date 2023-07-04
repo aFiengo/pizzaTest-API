@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using Truextend.PizzaTest.Core.Exceptions;
+using Truextend.PizzaTest.Logic.Exceptions;
 using Truextend.PizzaTest.Data;
 using Truextend.PizzaTest.Data.Models;
 using Truextend.PizzaTest.Logic.Managers.Base;
