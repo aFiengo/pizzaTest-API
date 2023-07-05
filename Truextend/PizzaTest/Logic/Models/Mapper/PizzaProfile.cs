@@ -13,6 +13,7 @@ namespace Truextend.PizzaTest.Logic.Models.Mapper
         public PizzaProfile() 
         {
             this.CreateMap<Pizza, PizzaDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Toppings, opt => opt.MapFrom(src => src.PizzaToppings.Select(pt => pt.Topping.Name)));
 
         }

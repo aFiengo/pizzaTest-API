@@ -32,6 +32,11 @@ namespace Truextend.PizzaTest.Data
                 .WithOne(pt => pt.Pizza)
                 .HasForeignKey(pt => pt.PizzaId);
 
+            modelBuilder.Entity<Topping>()
+                .HasMany(t => t.PizzaToppings)
+                .WithOne(pt => pt.Topping)
+                .HasForeignKey(pt => pt.ToppingId);
+
             modelBuilder.Entity<PizzaTopping>()
                 .HasKey(pt => new { pt.PizzaId, pt.ToppingId });
 
@@ -42,12 +47,7 @@ namespace Truextend.PizzaTest.Data
 
             modelBuilder.Entity<PizzaTopping>()
                 .HasOne(pt => pt.Topping)
-                .WithMany()
-                .HasForeignKey(pt => pt.ToppingId);
-
-            modelBuilder.Entity<Topping>()
-                .HasMany(t => t.PizzaToppings)
-                .WithOne(pt => pt.Topping)
+                .WithMany(t => t.PizzaToppings)
                 .HasForeignKey(pt => pt.ToppingId);
 
         }

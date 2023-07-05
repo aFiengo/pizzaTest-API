@@ -46,7 +46,7 @@ namespace Truextend.PizzaTest.Data.Repository
                     throw new DatabaseException($"Topping with ID {toppingId} not found.");
 
                 var pizzaTopping = new PizzaTopping { PizzaId = pizzaId, ToppingId = toppingId };
-                await dbContext.PizzaTopping.AddAsync(pizzaTopping);
+                pizza.PizzaToppings.Add(pizzaTopping);
 
                 await dbContext.SaveChangesAsync();
 
