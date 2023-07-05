@@ -11,6 +11,6 @@ namespace Truextend.PizzaTest.Data.Models
     {
         public string Name { get; set; }
         public List<PizzaTopping> PizzaToppings { get; set; }
-        public double Price { get; set; }
+
     }
 }

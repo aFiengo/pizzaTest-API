@@ -17,6 +17,20 @@ namespace Truextend.PizzaTest.Data.Repository.Base
         {
             this.dbContext = dbContext;
         }
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            List<T> values = await dbContext.Set<T>().ToListAsync();
+            return values;
+        }
+        public async Task<T> GetByIdAsync(Guid id)
+        {
+            T value = await dbContext.Set<T>().FindAsync(id);
+            if (value == null)
+            {
+                throw new DatabaseException($"Entity of type {typeof(T).Name} with id {id} not found.");
+            }
+            return value;
+        }
         public async Task<T> CreateAsync(T entity)
         {
             try
@@ -36,33 +50,12 @@ namespace Truextend.PizzaTest.Data.Repository.Base
             await dbContext.SaveChangesAsync();
             return entity;
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            List<T> values = await dbContext.Set<T>().ToListAsync();
-            return values;
-        }
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, Boolean>> predicate)
-        {
-            return await dbContext.Set<T>().Where(predicate).ToListAsync();
-        }
-        public async Task<T> GetByIdAsync(Guid id)
-        {
-            T value = await dbContext.Set<T>().FindAsync(id);
-            if (value == null)
-            {
-                throw new DatabaseException($"Entity of type {typeof(T).Name} with id {id} not found.");
-            }
-            return value;
-        }
         public async Task<T> UpdateAsync(T entity)
         {
             dbContext.Entry(entity).State = EntityState.Modified;
             await dbContext.SaveChangesAsync();
             return entity;
         }
-        public bool ExistsByPredicate(Expression<Func<T, Boolean>> predicate)
-        {
-            return dbContext.Set<T>().Where(predicate).Any();
-        }
+        
     }
 }

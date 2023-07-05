@@ -17,9 +17,7 @@ namespace Truextend.PizzaTest.Data
             _config = config;
         }
         public DbSet<Pizza> Pizza { get; set; }
-        public DbSet<PizzaPrice> PizzaPrice { get; set; }
         public DbSet<PizzaTopping> PizzaTopping { get; set; }
-        public DbSet<Size> Size { get; set; }
         public DbSet<Topping> Topping { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,16 +32,6 @@ namespace Truextend.PizzaTest.Data
                 .WithOne(pt => pt.Pizza)
                 .HasForeignKey(pt => pt.PizzaId);
 
-            modelBuilder.Entity<Pizza>()
-                .HasMany(p => p.PizzaPrices)
-                .WithOne(pp => pp.Pizza)
-                .HasForeignKey(pp => pp.PizzaId);
-
-            modelBuilder.Entity<Size>()
-                .HasMany(s => s.PizzaPrices)
-                .WithOne(pp => pp.Size)
-                .HasForeignKey(pp => pp.SizeId);
-
             modelBuilder.Entity<PizzaTopping>()
                 .HasKey(pt => new { pt.PizzaId, pt.ToppingId });
 
@@ -56,19 +44,6 @@ namespace Truextend.PizzaTest.Data
                 .HasOne(pt => pt.Topping)
                 .WithMany()
                 .HasForeignKey(pt => pt.ToppingId);
-
-            modelBuilder.Entity<PizzaPrice>()
-                .HasKey(pp => new { pp.PizzaId, pp.SizeId }); 
-
-            modelBuilder.Entity<PizzaPrice>()
-                .HasOne(pp => pp.Pizza)
-                .WithMany(p => p.PizzaPrices)
-                .HasForeignKey(pp => pp.PizzaId);
-
-            modelBuilder.Entity<PizzaPrice>()
-                .HasOne(pp => pp.Size)
-                .WithMany(s => s.PizzaPrices)
-                .HasForeignKey(pp => pp.SizeId);
 
             modelBuilder.Entity<Topping>()
                 .HasMany(t => t.PizzaToppings)

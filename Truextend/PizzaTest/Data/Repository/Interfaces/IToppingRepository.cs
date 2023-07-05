@@ -10,6 +10,5 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
 {
     public interface IToppingRepository : IRepository<Topping>
     {
-        public Task<IEnumerable<Topping>> GetAllToppingsAsync();
     }
 }

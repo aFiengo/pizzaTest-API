@@ -82,7 +82,6 @@ namespace Truextend.PizzaTest.Logic.Managers
             var updatedPizza = _mapper.Map<Pizza>(pizzaToUpdate);
             existingPizza.Name = updatedPizza.Name;
             existingPizza.PizzaToppings = updatedPizza.PizzaToppings;
-            existingPizza.PizzaPrices = updatedPizza.PizzaPrices;
 
             var result = await _uow.PizzaRepository.UpdateAsync(existingPizza);
             return _mapper.Map<PizzaDTO>(result);

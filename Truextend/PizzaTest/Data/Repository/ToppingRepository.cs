@@ -14,16 +14,6 @@ namespace Truextend.PizzaTest.Data.Repository
     public class ToppingRepository : Repository<Topping>, IToppingRepository
     {
         public ToppingRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
-        public async Task<IEnumerable<Topping>> GetAllToppingsAsync()
-        {
-            try
-            {
-                return await dbContext.Topping.ToListAsync();
-            }
-            catch (Exception e)
-            {
-                throw new DatabaseException("Error retrieving all toppings: " + e.Message);
-            }
-        }
+        
     }
 }

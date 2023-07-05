@@ -14,24 +14,6 @@ namespace Truextend.PizzaTest.Data.Repository
     public class PizzaRepository : Repository<Pizza>, IPizzaRepository
     {
         public PizzaRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
-        public async Task<IEnumerable<Pizza>> GetAllPizzasAsync()
-        {
-            return await dbContext.Pizza
-                .Include(p => p.PizzaPrices)
-                .Include(p => p.PizzaToppings)
-                    .ThenInclude(pt => pt.Topping)
-                .ToListAsync();
-        }
-
-        public async Task<Pizza> GetByIdAsync(Guid id)
-        {
-            return await dbContext.Pizza
-                .Include(p => p.PizzaPrices)
-                .Include(p => p.PizzaToppings)
-                    .ThenInclude(pt => pt.Topping)
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
         public async Task<IEnumerable<Topping>> GetToppingsForPizzaAsync(Guid pizzaId)
         {
             var pizza = await dbContext.Pizza

@@ -15,7 +15,5 @@ namespace Truextend.PizzaTest.Data.Repository.Base
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);
-        bool ExistsByPredicate(Expression<Func<T, Boolean>> predicate);
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, Boolean>> predicate);
     }
 }

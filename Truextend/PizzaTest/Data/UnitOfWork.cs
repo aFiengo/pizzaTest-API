@@ -14,14 +14,12 @@ namespace Truextend.PizzaTest.Data
     {
         private readonly PizzaDbContext _pizzaDbContext;
         private readonly IPizzaRepository _pizza;
-        private readonly ISizeRepository _size;
         private readonly IToppingRepository _topping;
 
         public UnitOfWork(PizzaDbContext dbContext)
         {
             _pizzaDbContext = dbContext;
             _pizza = new PizzaRepository(_pizzaDbContext);
-            _size= new SizeRepository(_pizzaDbContext);
             _topping = new ToppingRepository(_pizzaDbContext);
         }
         public void BeginTransaction()
@@ -68,10 +66,6 @@ namespace Truextend.PizzaTest.Data
         public IPizzaRepository PizzaRepository
         {
             get { return _pizza;  }
-        }
-        public ISizeRepository SizeRepository
-        {
-            get { return _size; }
         }
         public IToppingRepository ToppingRepository
         {

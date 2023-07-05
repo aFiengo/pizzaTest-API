@@ -10,7 +10,6 @@ namespace Truextend.PizzaTest.Data
     public interface IUnitOfWork
     {
         IPizzaRepository PizzaRepository { get; }
-        ISizeRepository SizeRepository { get; }
         IToppingRepository ToppingRepository { get; }
         void BeginTransaction();
         void CommitTransaction();
