@@ -22,6 +22,10 @@ namespace Truextend.PizzaTest.Data
             _pizza = new PizzaRepository(_pizzaDbContext);
             _topping = new ToppingRepository(_pizzaDbContext);
         }
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _pizzaDbContext.SaveChangesAsync();
+        }
         public void BeginTransaction()
         {
             _pizzaDbContext.Database.BeginTransaction();

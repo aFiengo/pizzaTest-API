@@ -42,21 +42,12 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
         public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
-            var pizza = await _uow.PizzaRepository.GetByIdAsync(pizzaId);
+            var pizza = await _uow.PizzaRepository.AddToppingToPizzaAsync(pizzaId, toppingId);
             if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {pizzaId} not found.");
             }
 
-            var topping = await _uow.ToppingRepository.GetByIdAsync(toppingId);
-            if (topping == null)
-            {
-                throw new NotFoundException($"Topping with ID {toppingId} not found.");
-            }
-
-            var pizzaTopping = new PizzaTopping { PizzaId = pizzaId, ToppingId = toppingId };
-
-            await _uow.PizzaRepository.UpdateAsync(pizza);
             return _mapper.Map<PizzaDTO>(pizza);
         }
         public async Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId)
@@ -79,12 +70,19 @@ namespace Truextend.PizzaTest.Logic.Managers
                 throw new NotFoundException($"Pizza with ID {id} not found.");
             }
 
-            var updatedPizza = _mapper.Map<Pizza>(pizzaToUpdate);
-            existingPizza.Name = updatedPizza.Name;
-            existingPizza.PizzaToppings = updatedPizza.PizzaToppings;
+            var updatedToppings = pizzaToUpdate.Toppings.Select(t => _mapper.Map<Topping>(t)).ToList();
 
-            var result = await _uow.PizzaRepository.UpdateAsync(existingPizza);
-            return _mapper.Map<PizzaDTO>(result);
+            existingPizza.Name = pizzaToUpdate.Name;
+            existingPizza.PizzaToppings = updatedToppings.Select(t => new PizzaTopping
+            {
+                PizzaId = existingPizza.Id,
+                ToppingId = t.Id
+            }).ToList();
+
+            await _uow.PizzaRepository.UpdateAsync(existingPizza);
+            await _uow.SaveChangesAsync();
+
+            return _mapper.Map<PizzaDTO>(existingPizza);
         }
         public async Task<bool> DeleteAsync(Guid id)
         {

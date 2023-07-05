@@ -26,7 +26,7 @@ namespace Truextend.PizzaTest.Logic.Managers
 
         public async Task<IEnumerable<ToppingDTO>> GetAllAsync()
         {
-            var toppings = await _uow.PizzaRepository.GetAllAsync();
+            var toppings = await _uow.ToppingRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<ToppingDTO>>(toppings);
         }
         public async Task<ToppingDTO> GetByIdAsync(Guid id)
@@ -37,19 +37,20 @@ namespace Truextend.PizzaTest.Logic.Managers
         public async Task<ToppingDTO> CreateAsync(ToppingDTO toppingToAdd)
         {
             var topping = _mapper.Map<Topping>(toppingToAdd);
+            topping.Id = Guid.NewGuid();
             var createdTopping = await _uow.ToppingRepository.CreateAsync(topping);
             return _mapper.Map<ToppingDTO>(createdTopping);
         }
         public async Task<ToppingDTO> UpdateAsync(Guid id, ToppingDTO toppingToUpdate)
         {
+            toppingToUpdate.Id = id;
             var existingTopping = await _uow.ToppingRepository.GetByIdAsync(id);
             if (existingTopping == null)
             {
                 throw new NotFoundException($"Topping with ID {id} not found.");
             }
 
-            var updatedTopping = _mapper.Map<Topping>(toppingToUpdate);
-            existingTopping.Name = updatedTopping.Name;
+            _mapper.Map(toppingToUpdate, existingTopping);
 
             var result = await _uow.ToppingRepository.UpdateAsync(existingTopping);
             return _mapper.Map<ToppingDTO>(result);

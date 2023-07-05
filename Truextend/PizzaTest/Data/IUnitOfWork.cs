@@ -11,6 +11,7 @@ namespace Truextend.PizzaTest.Data
     {
         IPizzaRepository PizzaRepository { get; }
         IToppingRepository ToppingRepository { get; }
+        Task<int> SaveChangesAsync();
         void BeginTransaction();
         void CommitTransaction();
         void RollBackTransaction();
