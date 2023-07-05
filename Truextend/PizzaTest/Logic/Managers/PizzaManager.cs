@@ -11,6 +11,7 @@ using Truextend.PizzaTest.Data.Models;
 using Truextend.PizzaTest.Logic.Managers.Base;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Truextend.PizzaTest.Logic.Managers
 {
@@ -26,19 +27,17 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
         public async Task<IEnumerable<PizzaDTO>> GetAllAsync()
         {
-            var pizzas = await _uow.PizzaRepository.GetAllAsync();
+            var pizzas = await _uow.PizzaRepository.GetAllPizzaAsync();
             return _mapper.Map<IEnumerable<PizzaDTO>>(pizzas);
         }
         public async Task<PizzaDTO> GetByIdAsync(Guid id)
         {
-            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
+            var pizza = await _uow.PizzaRepository.GetPizzaByIdAsync(id);
             return _mapper.Map<PizzaDTO>(pizza);
         }
-        public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaToAdd)
+        public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaDto)
         {
-            var pizza = _mapper.Map<Pizza>(pizzaToAdd);
-            var createdPizza = await _uow.PizzaRepository.CreateAsync(pizza);
-            return _mapper.Map<PizzaDTO>(createdPizza);
+            return null;
         }
         public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
@@ -57,8 +56,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             {
                 throw new NotFoundException($"Pizza with ID {pizzaId} not found.");
             }
-            var toppings = pizza.PizzaToppings
-                            .Select(pt => pt.Topping);
+            var toppings = pizza.Toppings;
 
             return _mapper.Map<IEnumerable<ToppingDTO>>(toppings);
         }
@@ -73,27 +71,28 @@ namespace Truextend.PizzaTest.Logic.Managers
             var updatedToppings = pizzaToUpdate.Toppings.Select(t => _mapper.Map<Topping>(t)).ToList();
 
             existingPizza.Name = pizzaToUpdate.Name;
-            existingPizza.PizzaToppings = updatedToppings.Select(t => new PizzaTopping
-            {
-                PizzaId = existingPizza.Id,
-                ToppingId = t.Id
-            }).ToList();
+            existingPizza.Toppings = updatedToppings;
 
             await _uow.PizzaRepository.UpdateAsync(existingPizza);
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<PizzaDTO>(existingPizza);
         }
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<PizzaDTO> DeletePizzaAsync(Guid id)
         {
-            var existingPizza = await _uow.PizzaRepository.GetByIdAsync(id);
-            if (existingPizza == null)
+            var pizza = await _uow.PizzaRepository.GetPizzaWithToppingsAsync(id);
+            if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {id} not found.");
             }
 
-            await _uow.PizzaRepository.DeleteAsync(existingPizza);
-            return await _uow.PizzaRepository.GetByIdAsync(id) == null;
+            pizza.Toppings.Clear();
+            await _uow.SaveChangesAsync();
+
+            _uow.PizzaRepository.Delete(pizza);
+            await _uow.SaveChangesAsync();
+
+            return _mapper.Map<PizzaDTO>(pizza);
         }
     }
 }

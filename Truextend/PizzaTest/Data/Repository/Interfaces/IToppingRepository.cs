@@ -10,5 +10,7 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
 {
     public interface IToppingRepository : IRepository<Topping>
     {
+        Task<Topping> Delete(Guid id);
+        Task<IEnumerable<Topping>> GetManyAsync(IEnumerable<Guid> ids);
     }
 }

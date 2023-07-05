@@ -10,7 +10,11 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
 {
     public interface IPizzaRepository : IRepository<Pizza>
     {
+        Task<IEnumerable<Pizza>> GetAllPizzaAsync();
+        Task<Pizza> GetPizzaByIdAsync(Guid id);
         Task<Pizza>AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<Topping>> GetToppingsForPizzaAsync(Guid pizzaId);
+        Task<Pizza> GetPizzaWithToppingsAsync(Guid id);
+        void Delete(Pizza pizza);
     }
 }

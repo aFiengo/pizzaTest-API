@@ -17,6 +17,6 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
         Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId);
         Task<PizzaDTO> UpdateAsync(Guid id, PizzaDTO pizzaToUpdate);
-        Task<bool> DeleteAsync(Guid id);
+        Task<PizzaDTO> DeletePizzaAsync(Guid id);
     }
 }

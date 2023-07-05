@@ -17,18 +17,29 @@ namespace Truextend.PizzaTest.Presentation.Controllers
             _pizzaManager = pizzaManager;
         }
 
-        [HttpPost("{pizzaId}/toppings/{toppingId}")]
+        [HttpPost("{Id}/toppings/{toppingId}")]
         public async Task<IActionResult> AddToppingToPizzaAsync([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
             PizzaDTO updatedPizza = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
             return Ok(new MiddlewareResponse<PizzaDTO>(updatedPizza));
         }
 
-        [HttpGet("{id}/toppings")]
+        [HttpGet("{Id}/toppings")]
         public async Task<IActionResult> GetToppingsForPizzaAsync([FromRoute] Guid id)
         {
             var toppings = await _pizzaManager.GetToppingsForPizzaAsync(id);
             return Ok(new MiddlewareResponse<IEnumerable<ToppingDTO>>(toppings));
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeletePizza([FromRoute] Guid id)
+        {
+            var deletedPizza = await _pizzaManager.DeletePizzaAsync(id);
+            if (deletedPizza == null)
+            {
+                return NotFound();
+            }
+            return Ok(deletedPizza);
         }
     }
 }

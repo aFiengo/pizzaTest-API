@@ -24,11 +24,11 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddDbContext<PizzaDbContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("PizzaContextDb"));
+    options.UseLazyLoadingProxies().UseMySQL(builder.Configuration.GetConnectionString("PizzaContextDb"));
 });
 //insert managers
 builder.Services.AddTransient<IPizzaManager, PizzaManager>();
-builder.Services.AddTransient<IGenericManager<ToppingDTO>, ToppingManager>();
+builder.Services.AddTransient<IToppingManager, ToppingManager>();
 //
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

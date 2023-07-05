@@ -55,16 +55,15 @@ namespace Truextend.PizzaTest.Logic.Managers
             var result = await _uow.ToppingRepository.UpdateAsync(existingTopping);
             return _mapper.Map<ToppingDTO>(result);
         }
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<ToppingDTO> DeleteTopping(Guid id)
         {
-            var existingTopping = await _uow.ToppingRepository.GetByIdAsync(id);
-            if (existingTopping == null)
+            var topping = await _uow.ToppingRepository.Delete(id);
+            if (topping != null)
             {
-                throw new NotFoundException($"Topping with ID {id} not found.");
+                await _uow.SaveChangesAsync();
             }
 
-            await _uow.ToppingRepository.DeleteAsync(existingTopping);
-            return await _uow.ToppingRepository.GetByIdAsync(id) == null;
+            return _mapper.Map<ToppingDTO>(topping);
         }
     }
 }

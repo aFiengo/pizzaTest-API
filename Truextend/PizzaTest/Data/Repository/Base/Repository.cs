@@ -44,12 +44,6 @@ namespace Truextend.PizzaTest.Data.Repository.Base
                 throw new DatabaseException("ERROR: " + e.InnerException.Message);
             }
         }
-        public async Task<T> DeleteAsync(T entity)
-        {
-            dbContext.Set<T>().Remove(entity);
-            await dbContext.SaveChangesAsync();
-            return entity;
-        }
         public async Task<T> UpdateAsync(T entity)
         {
             dbContext.Entry(entity).State = EntityState.Modified;

@@ -14,26 +14,34 @@ namespace Truextend.PizzaTest.Data.Repository
     public class PizzaRepository : Repository<Pizza>, IPizzaRepository
     {
         public PizzaRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
+        public async Task<IEnumerable<Pizza>> GetAllPizzaAsync()
+        {
+            return await dbContext.Pizza
+                .Include(p => p.Toppings)
+                .ToListAsync();
+        }
+        public async Task<Pizza> GetPizzaByIdAsync(Guid id)
+        {
+            return await dbContext.Pizza
+                .Include(p => p.Toppings)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
         public async Task<IEnumerable<Topping>> GetToppingsForPizzaAsync(Guid pizzaId)
         {
             var pizza = await dbContext.Pizza
-                .Include(p => p.PizzaToppings)
-                    .ThenInclude(pt => pt.Topping)
+                .Include(p => p.Toppings)
                 .FirstOrDefaultAsync(p => p.Id == pizzaId);
 
             if (pizza == null)
                 return null;
 
-            var toppings = pizza.PizzaToppings
-                .Select(pt => pt.Topping);
-
-            return toppings;
+            return pizza.Toppings;
         }
 
         public async Task<Pizza> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
             var pizza = await dbContext.Pizza
-            .Include(p => p.PizzaToppings)
+            .Include(p => p.Toppings)
             .FirstOrDefaultAsync(p => p.Id == pizzaId);
 
             var topping = await dbContext.Topping.FindAsync(toppingId);
@@ -42,23 +50,35 @@ namespace Truextend.PizzaTest.Data.Repository
                 return null;
             }
 
-            pizza.PizzaToppings.Add(new PizzaTopping { PizzaId = pizzaId, ToppingId = toppingId });
+            pizza.Toppings.Add(topping);
 
             await dbContext.SaveChangesAsync();
 
             return pizza;
         }
-        public void UpdateToppings(Pizza existingPizza, List<Topping> updatedToppings)
+        public void UpdatePizza(Pizza existingPizza, List<Topping> updatedToppings)
         {
-            existingPizza.PizzaToppings.RemoveAll(pt => !updatedToppings.Exists(t => t.Id == pt.ToppingId));
+            existingPizza.Toppings.Clear();
 
             foreach (var topping in updatedToppings)
             {
-                if (!existingPizza.PizzaToppings.Exists(pt => pt.ToppingId == topping.Id))
+                if (!existingPizza.Toppings.Any(t => t.Id == topping.Id))
                 {
-                    existingPizza.PizzaToppings.Add(new PizzaTopping { PizzaId = existingPizza.Id, ToppingId = topping.Id });
+                    existingPizza.Toppings.Add(topping);
                 }
             }
         }
+        public async Task<Pizza> GetPizzaWithToppingsAsync(Guid id)
+        {
+            var pizza = await dbContext.Pizza
+                .Include(p => p.Toppings)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            return pizza;
+        }
+        public void Delete(Pizza pizza)
+        {
+            dbContext.Pizza.Remove(pizza);
+        }
+        
     }
 }

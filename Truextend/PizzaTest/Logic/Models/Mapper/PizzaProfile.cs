@@ -12,19 +12,13 @@ namespace Truextend.PizzaTest.Logic.Models.Mapper
     {
         public PizzaProfile() 
         {
-            CreateMap<Pizza, PizzaDTO>()
+            this.CreateMap<Pizza, PizzaDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Toppings, opt => opt.MapFrom(src => src.PizzaToppings.Select(pt => pt.Topping)));
+                .ForMember(dest => dest.Toppings, opt => opt.MapFrom(src => src.Toppings))
+                .ReverseMap();
+            this.CreateMap<Pizza, PizzaNameDTO>();
+            this.CreateMap<Topping, ToppingDTO>().ReverseMap();
         }
     }
-    public class ToppingProfile : Profile
-    {
-        public ToppingProfile()
-        {
-            CreateMap<Topping, ToppingDTO>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
-            CreateMap<ToppingDTO, Topping>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
-        }
-    }
+   
 }
