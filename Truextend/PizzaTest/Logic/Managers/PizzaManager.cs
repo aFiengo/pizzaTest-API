@@ -35,9 +35,24 @@ namespace Truextend.PizzaTest.Logic.Managers
             var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
             return _mapper.Map<PizzaDTO>(pizza);
         }
-        public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaDto)
+        public async Task<PizzaDTO> CreateAsync(PizzaCreateDTO pizzaToCreate)
         {
-            return null;
+            var pizzaEntity = _mapper.Map<Pizza>(pizzaToCreate);
+
+            foreach (var toppingId in pizzaToCreate.ToppingIds)
+            {
+                var toppingEntity = await _uow.ToppingRepository.GetByIdAsync(toppingId);
+                if (toppingEntity != null)
+                {
+                    pizzaEntity.Toppings.Add(toppingEntity);
+                }
+            }
+
+            await _uow.PizzaRepository.CreateAsync(pizzaEntity);
+            await _uow.SaveChangesAsync();
+
+            var pizzaDto = _mapper.Map<PizzaDTO>(pizzaEntity);
+            return pizzaDto;
         }
         public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
@@ -104,6 +119,10 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
 
         public async Task<IEnumerable<PizzaDTO>>GetAllAsync()
+        {
+            return null;
+        }
+        public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaDTO)
         {
             return null;
         }

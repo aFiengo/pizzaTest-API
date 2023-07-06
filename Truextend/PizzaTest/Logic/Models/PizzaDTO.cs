@@ -18,4 +18,9 @@ namespace Truextend.PizzaTest.Logic.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
+    public class PizzaCreateDTO
+    {
+        public string Name { get; set; }
+        public IEnumerable<Guid> ToppingIds { get; set; }
+    }
 }
