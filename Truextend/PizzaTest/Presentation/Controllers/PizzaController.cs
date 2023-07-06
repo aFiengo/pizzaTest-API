@@ -9,20 +9,27 @@ namespace Truextend.PizzaTest.Presentation.Controllers
 {
     [Produces("application/json")]
     [Route("api/pizzas")]
-    public class PizzaController : BasePizzaTestController<PizzaDTO>
+    public class PizzaController : ControllerBase
     {
         private readonly IPizzaManager _pizzaManager;
-        public PizzaController(IPizzaManager pizzaManager) : base(pizzaManager)
+        public PizzaController(IPizzaManager pizzaManager)
         {
             _pizzaManager = pizzaManager;
         }
-
-        [HttpPost]
-        [Route("{id}/toppings/{toppingId}")]
-        public async Task<IActionResult> AddToppingToPizzaAsync([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetAllPizzasAsync()
         {
-            PizzaDTO updatedPizza = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
-            return Ok(new MiddlewareResponse<PizzaDTO>(updatedPizza));
+            var result = await _pizzaManager.GetAllPizzaAsync();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> GetPizzaByIdAsync(Guid id)
+        {
+            var result = await _pizzaManager.GetPizzaByIdAsync(id);
+            return Ok(result);
         }
 
         [HttpGet]
@@ -31,6 +38,29 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         {
             var toppings = await _pizzaManager.GetToppingsForPizzaAsync(id);
             return Ok(new MiddlewareResponse<IEnumerable<ToppingDTO>>(toppings));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
+        {
+            var result = await _pizzaManager.CreatePizzaAsync(pizzaToCreate);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdatePizzaAsync(Guid id, PizzaDTO pizzaToUpdate)
+        {
+            var result = await _pizzaManager.UpdatePizzaAsync(id, pizzaToUpdate);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("{pizzaId}/toppings/{toppingId}")]
+        public async Task<IActionResult> AddToppingToPizzaAsync([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
+        {
+            PizzaDTO updatedPizza = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
+            return Ok(new MiddlewareResponse<PizzaDTO>(updatedPizza));
         }
 
         [HttpDelete]

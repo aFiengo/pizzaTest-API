@@ -34,12 +34,6 @@ namespace Truextend.PizzaTest.Data.Repository
             }
             return topping;
         }
-        public async Task<IEnumerable<Topping>> GetManyAsync(IEnumerable<Guid> ids)
-        {
-            return await dbContext.Topping
-                .Where(t => ids.Contains(t.Id))
-                .ToListAsync();
-        }
 
     }
 }

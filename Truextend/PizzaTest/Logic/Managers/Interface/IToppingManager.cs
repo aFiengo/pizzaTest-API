@@ -12,9 +12,6 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
     public interface IToppingManager : IGenericManager<ToppingDTO>
     {
         Task<IEnumerable<ToppingDTO>> GetAllAsync();
-        Task<ToppingDTO> GetByIdAsync(Guid id);
-        Task<ToppingDTO> CreateAsync(ToppingDTO topping);
-        Task<ToppingDTO> UpdateAsync(Guid id, ToppingDTO toppingToUpdate);
         Task<ToppingDTO> DeleteTopping(Guid id);
     }
 }

@@ -9,15 +9,14 @@ using Truextend.PizzaTest.Logic.Models;
 
 namespace Truextend.PizzaTest.Logic.Managers.Interface
 {
-    public interface IPizzaManager : IGenericManager<PizzaDTO>
+    public interface IPizzaManager
     {
         Task<IEnumerable<PizzaNameDTO>> GetAllPizzaAsync();
-        Task<PizzaDTO> GetByIdAsync(Guid id);
-        Task<PizzaDTO> CreateAsync(PizzaCreateDTO pizzaToCreate);
+        Task<PizzaNameDTO> GetPizzaByIdAsync(Guid id);
+        Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate);
         Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId);
-        Task<PizzaDTO> UpdateAsync(Guid id, PizzaDTO pizzaToUpdate);
+        Task<PizzaDTO> UpdatePizzaAsync(Guid id, PizzaDTO pizzaToUpdate);
         Task<PizzaDTO> DeletePizzaAsync(Guid id);
-        Task<IEnumerable<PizzaDTO>> GetAllAsync();
     }
 }

@@ -12,6 +12,7 @@ using Truextend.PizzaTest.Logic.Managers.Base;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Truextend.PizzaTest.Logic.Managers
 {
@@ -28,14 +29,15 @@ namespace Truextend.PizzaTest.Logic.Managers
         public async Task<IEnumerable<PizzaNameDTO>> GetAllPizzaAsync()
         {
             var pizzas = await _uow.PizzaRepository.GetAllAsync();
+            Debug.WriteLine($"Obtained {pizzas.Count()} pizzas from the database.");
             return _mapper.Map<IEnumerable<PizzaNameDTO>>(pizzas);
         }
-        public async Task<PizzaDTO> GetByIdAsync(Guid id)
+        public async Task<PizzaNameDTO> GetPizzaByIdAsync(Guid id)
         {
             var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
-            return _mapper.Map<PizzaDTO>(pizza);
+            return _mapper.Map<PizzaNameDTO>(pizza);
         }
-        public async Task<PizzaDTO> CreateAsync(PizzaCreateDTO pizzaToCreate)
+        public async Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
         {
             var pizzaEntity = _mapper.Map<Pizza>(pizzaToCreate);
 
@@ -79,7 +81,7 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             return _mapper.Map<IEnumerable<ToppingDTO>>(toppings);
         }
-        public async Task<PizzaDTO> UpdateAsync(Guid id, PizzaDTO pizzaToUpdate)
+        public async Task<PizzaDTO> UpdatePizzaAsync(Guid id, PizzaDTO pizzaToUpdate)
         {
             var existingPizza = await _uow.PizzaRepository.GetByIdAsync(id);
             if (existingPizza == null)
@@ -92,10 +94,10 @@ namespace Truextend.PizzaTest.Logic.Managers
             existingPizza.Name = pizzaToUpdate.Name;
             existingPizza.Toppings = updatedToppings;
 
-            await _uow.PizzaRepository.UpdateAsync(existingPizza);
+            var result = await _uow.PizzaRepository.UpdateAsync(existingPizza);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<PizzaDTO>(existingPizza);
+            return _mapper.Map<PizzaDTO>(result);
         }
         public async Task<PizzaDTO> DeletePizzaAsync(Guid id)
         {
@@ -118,13 +120,5 @@ namespace Truextend.PizzaTest.Logic.Managers
             return _mapper.Map<PizzaDTO>(pizza);
         }
 
-        public async Task<IEnumerable<PizzaDTO>>GetAllAsync()
-        {
-            return null;
-        }
-        public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaDTO)
-        {
-            return null;
-        }
     }
 }
