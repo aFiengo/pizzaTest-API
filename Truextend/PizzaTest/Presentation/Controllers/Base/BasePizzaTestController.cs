@@ -21,9 +21,9 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetItemByID([FromRoute] Guid Id)
+        public async Task<IActionResult> GetItemByID([FromRoute] Guid id)
         {
-            T itemDTO = await _classManager.GetByIdAsync(Id);
+            T itemDTO = await _classManager.GetByIdAsync(id);
             return Ok(new MiddlewareResponse<T>(itemDTO));
         }
 
@@ -37,9 +37,9 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
 
         [HttpPut]
         [Route("{id}")]
-        public virtual async Task<IActionResult> UpdateById([FromRoute] Guid Id, [FromBody] T item)
+        public virtual async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] T item)
         {
-            T status = await _classManager.UpdateAsync(Id, item);
+            T status = await _classManager.UpdateAsync(id, item);
             return Ok(new MiddlewareResponse<T>(status));
         }
 
