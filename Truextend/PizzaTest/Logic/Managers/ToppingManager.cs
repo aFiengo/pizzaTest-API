@@ -58,9 +58,13 @@ namespace Truextend.PizzaTest.Logic.Managers
         public async Task<ToppingDTO> DeleteTopping(Guid id)
         {
             var topping = await _uow.ToppingRepository.Delete(id);
-            if (topping != null)
+            if (id == Guid.Empty)
             {
-                await _uow.SaveChangesAsync();
+                throw new ArgumentException("Invalid ID.");
+            }
+            if (topping == null)
+            {
+                throw new NotFoundException($"Topping with ID {id} not found.");
             }
 
             return _mapper.Map<ToppingDTO>(topping);

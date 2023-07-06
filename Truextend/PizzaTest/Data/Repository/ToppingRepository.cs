@@ -19,7 +19,18 @@ namespace Truextend.PizzaTest.Data.Repository
             var topping = await dbContext.Topping.FindAsync(id);
             if (topping != null)
             {
+                var pizzas = dbContext.Pizza
+                    .Include(p => p.Toppings)
+                    .Where(p => p.Toppings.Any(t => t.Id == id));
+
+                foreach (var pizza in pizzas)
+                {
+                    pizza.Toppings.Remove(topping);
+                }
+
                 dbContext.Topping.Remove(topping);
+
+                await dbContext.SaveChangesAsync();
             }
             return topping;
         }
