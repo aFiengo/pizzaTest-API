@@ -44,30 +44,27 @@ namespace Truextend.PizzaTest.Data.Repository
             .Include(p => p.Toppings)
             .FirstOrDefaultAsync(p => p.Id == pizzaId);
 
+            if (pizza == null)
+            {
+                return null;
+            }
+
             var topping = await dbContext.Topping.FindAsync(toppingId);
             if (topping == null)
             {
                 return null;
             }
 
-            pizza.Toppings.Add(topping);
+            if (!pizza.Toppings.Any(t => t.Id == toppingId))
+            {
+                pizza.Toppings.Add(topping);
+            }
 
             await dbContext.SaveChangesAsync();
 
             return pizza;
         }
-        public void UpdatePizza(Pizza existingPizza, List<Topping> updatedToppings)
-        {
-            existingPizza.Toppings.Clear();
-
-            foreach (var topping in updatedToppings)
-            {
-                if (!existingPizza.Toppings.Any(t => t.Id == topping.Id))
-                {
-                    existingPizza.Toppings.Add(topping);
-                }
-            }
-        }
+      
         public async Task<Pizza> GetPizzaWithToppingsAsync(Guid id)
         {
             var pizza = await dbContext.Pizza

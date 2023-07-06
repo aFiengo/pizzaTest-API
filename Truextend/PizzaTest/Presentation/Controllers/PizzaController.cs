@@ -41,6 +41,7 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         }
 
         [HttpPost]
+        [Route("")]
         public async Task<IActionResult> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
         {
             var result = await _pizzaManager.CreatePizzaAsync(pizzaToCreate);
@@ -49,7 +50,7 @@ namespace Truextend.PizzaTest.Presentation.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdatePizzaAsync(Guid id, PizzaDTO pizzaToUpdate)
+        public async Task<IActionResult> UpdatePizzaAsync(Guid id, PizzaCreateDTO pizzaToUpdate)
         {
             var result = await _pizzaManager.UpdatePizzaAsync(id, pizzaToUpdate);
             return Ok(result);

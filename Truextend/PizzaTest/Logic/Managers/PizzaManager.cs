@@ -39,7 +39,19 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
         public async Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
         {
+            if (pizzaToCreate == null)
+            {
+                throw new ArgumentNullException(nameof(pizzaToCreate));
+            }
+
             var pizzaEntity = _mapper.Map<Pizza>(pizzaToCreate);
+
+            if (pizzaEntity == null)
+            {
+                throw new InvalidOperationException("Failed to map PizzaCreateDTO to Pizza.");
+            }
+
+            pizzaEntity.Toppings = new List<Topping>(); 
 
             foreach (var toppingId in pizzaToCreate.ToppingIds)
             {
@@ -58,11 +70,22 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
         public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
-            var pizza = await _uow.PizzaRepository.AddToppingToPizzaAsync(pizzaId, toppingId);
+            var pizza = await _uow.PizzaRepository.GetByIdAsync(pizzaId);
             if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {pizzaId} not found.");
             }
+
+            var topping = await _uow.ToppingRepository.GetByIdAsync(toppingId);
+            if (topping == null)
+            {
+                throw new NotFoundException($"Topping with ID {toppingId} not found.");
+            }
+
+            pizza.Toppings.Add(topping);         
+
+            await _uow.PizzaRepository.UpdateAsync(pizza);
+            await _uow.SaveChangesAsync();
 
             return _mapper.Map<PizzaDTO>(pizza);
         }
@@ -81,7 +104,7 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             return _mapper.Map<IEnumerable<ToppingDTO>>(toppings);
         }
-        public async Task<PizzaDTO> UpdatePizzaAsync(Guid id, PizzaDTO pizzaToUpdate)
+        public async Task<PizzaDTO> UpdatePizzaAsync(Guid id, PizzaCreateDTO pizzaToUpdate)
         {
             var existingPizza = await _uow.PizzaRepository.GetByIdAsync(id);
             if (existingPizza == null)
@@ -89,7 +112,16 @@ namespace Truextend.PizzaTest.Logic.Managers
                 throw new NotFoundException($"Pizza with ID {id} not found.");
             }
 
-            var updatedToppings = pizzaToUpdate.Toppings.Select(t => _mapper.Map<Topping>(t)).ToList();
+            var updatedToppings = new List<Topping>();
+            foreach (var toppingId in pizzaToUpdate.ToppingIds)
+            {
+                var topping = await _uow.ToppingRepository.GetByIdAsync(toppingId);
+                if (topping == null)
+                {
+                    throw new NotFoundException($"Topping with ID {toppingId} not found.");
+                }
+                updatedToppings.Add(topping);
+            }
 
             existingPizza.Name = pizzaToUpdate.Name;
             existingPizza.Toppings = updatedToppings;
