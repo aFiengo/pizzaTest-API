@@ -16,7 +16,8 @@ namespace Truextend.PizzaTest.Presentation.Controllers
             _toppingManager = toppingManager;
         }
 
-        [HttpDelete("{Id}")]
+        [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteTopping([FromRoute] Guid id)
         {
             var deletedTopping = await _toppingManager.DeleteTopping(id);

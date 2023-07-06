@@ -14,13 +14,13 @@ namespace Truextend.PizzaTest.Data.Repository
     public class PizzaRepository : Repository<Pizza>, IPizzaRepository
     {
         public PizzaRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
-        public async Task<IEnumerable<Pizza>> GetAllPizzaAsync()
+        public async Task<IEnumerable<Pizza>> GetAllAsync()
         {
             return await dbContext.Pizza
                 .Include(p => p.Toppings)
                 .ToListAsync();
         }
-        public async Task<Pizza> GetPizzaByIdAsync(Guid id)
+        public async Task<Pizza> GetByIdAsync(Guid id)
         {
             return await dbContext.Pizza
                 .Include(p => p.Toppings)

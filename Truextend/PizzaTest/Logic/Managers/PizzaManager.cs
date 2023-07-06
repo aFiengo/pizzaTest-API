@@ -25,14 +25,14 @@ namespace Truextend.PizzaTest.Logic.Managers
             _uow = uow;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PizzaDTO>> GetAllAsync()
+        public async Task<IEnumerable<PizzaNameDTO>> GetAllPizzaAsync()
         {
-            var pizzas = await _uow.PizzaRepository.GetAllPizzaAsync();
-            return _mapper.Map<IEnumerable<PizzaDTO>>(pizzas);
+            var pizzas = await _uow.PizzaRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<PizzaNameDTO>>(pizzas);
         }
         public async Task<PizzaDTO> GetByIdAsync(Guid id)
         {
-            var pizza = await _uow.PizzaRepository.GetPizzaByIdAsync(id);
+            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
             return _mapper.Map<PizzaDTO>(pizza);
         }
         public async Task<PizzaDTO> CreateAsync(PizzaDTO pizzaDto)
@@ -49,12 +49,16 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             return _mapper.Map<PizzaDTO>(pizza);
         }
-        public async Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId)
+        public async Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid id)
         {
-            var pizza = await _uow.PizzaRepository.GetByIdAsync(pizzaId);
+            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid ID.");
+            }
             if (pizza == null)
             {
-                throw new NotFoundException($"Pizza with ID {pizzaId} not found.");
+                throw new NotFoundException($"Pizza with ID {id} not found.");
             }
             var toppings = pizza.Toppings;
 
@@ -81,6 +85,10 @@ namespace Truextend.PizzaTest.Logic.Managers
         public async Task<PizzaDTO> DeletePizzaAsync(Guid id)
         {
             var pizza = await _uow.PizzaRepository.GetPizzaWithToppingsAsync(id);
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid ID.");
+            }
             if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {id} not found.");
@@ -93,6 +101,11 @@ namespace Truextend.PizzaTest.Logic.Managers
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<PizzaDTO>(pizza);
+        }
+
+        public async Task<IEnumerable<PizzaDTO>>GetAllAsync()
+        {
+            return null;
         }
     }
 }
