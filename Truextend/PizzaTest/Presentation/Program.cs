@@ -8,6 +8,8 @@ using Truextend.PizzaTest.Logic.Models;
 using Truextend.PizzaTest.Logic;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Managers.Base;
+using Microsoft.Extensions.FileProviders;
+using ServiceStack.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc(name: "v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "PizzeriaAPI", Version = "v1" });
@@ -47,8 +50,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAnyOrigin");
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,7 +59,10 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
     });
 }
-
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("AllowAnyOrigin");
 app.UseAuthorization();
 
 app.MapControllers();

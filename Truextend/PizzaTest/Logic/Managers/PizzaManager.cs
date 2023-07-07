@@ -29,7 +29,6 @@ namespace Truextend.PizzaTest.Logic.Managers
         public async Task<IEnumerable<PizzaNameDTO>> GetAllPizzaAsync()
         {
             var pizzas = await _uow.PizzaRepository.GetAllAsync();
-            Debug.WriteLine($"Obtained {pizzas.Count()} pizzas from the database.");
             return _mapper.Map<IEnumerable<PizzaNameDTO>>(pizzas);
         }
         public async Task<PizzaNameDTO> GetPizzaByIdAsync(Guid id)
@@ -48,23 +47,14 @@ namespace Truextend.PizzaTest.Logic.Managers
             {
                 throw new ArgumentNullException(nameof(pizzaToCreate));
             }
-            if (string.IsNullOrEmpty(pizzaToCreate.SmallImageUrl))
-            {
-                pizzaToCreate.SmallImageUrl = "https://drive.google.com/file/d/1KgTq5_fJ59wrEGi2DwfgSAwDtrot_won/view?usp=drive_link";
-                
-            }
-
-            if (string.IsNullOrEmpty(pizzaToCreate.LargeImageUrl))
-            {
-                pizzaToCreate.LargeImageUrl = "https://drive.google.com/file/d/1nAPT-7X3TPg3Y9cXEHE-CB4Amr4IhnZQ/view?usp=drive_link";
-            }
-
             var pizzaEntity = _mapper.Map<Pizza>(pizzaToCreate);
             if (pizzaEntity == null)
             {
                 throw new InvalidOperationException("Failed to map PizzaCreateDTO to Pizza.");
             }
 
+            pizzaEntity.SmallImageUrl = "https://drive.google.com/file/d/1KgTq5_fJ59wrEGi2DwfgSAwDtrot_won/view?usp=drive_link";
+            pizzaEntity.LargeImageUrl = "https://drive.google.com/file/d/1nAPT-7X3TPg3Y9cXEHE-CB4Amr4IhnZQ/view?usp=drive_link";
 
             var createdPizza = await _uow.PizzaRepository.CreatePizzaWithToppingsAsync(pizzaEntity, pizzaToCreate.ToppingIds);
 
