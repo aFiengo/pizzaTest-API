@@ -13,10 +13,12 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
     {
         Task<IEnumerable<PizzaNameDTO>> GetAllPizzaAsync();
         Task<PizzaNameDTO> GetPizzaByIdAsync(Guid id);
+        Task<PizzaDTO> GetPizzaToppingsByIdAAsync(Guid id);
         Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate);
         Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId);
         Task<PizzaDTO> UpdatePizzaAsync(Guid id, PizzaCreateDTO pizzaToUpdate);
         Task<PizzaDTO> DeletePizzaAsync(Guid id);
+        Task<PizzaDTO> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId);
     }
 }

@@ -37,35 +37,38 @@ namespace Truextend.PizzaTest.Logic.Managers
             var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
             return _mapper.Map<PizzaNameDTO>(pizza);
         }
-        public async Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
+        public async Task<PizzaDTO> GetPizzaToppingsByIdAAsync(Guid id)
+        {
+            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
+            return _mapper.Map<PizzaDTO>(pizza);
+        }
+    public async Task<PizzaDTO> CreatePizzaAsync(PizzaCreateDTO pizzaToCreate)
         {
             if (pizzaToCreate == null)
             {
                 throw new ArgumentNullException(nameof(pizzaToCreate));
             }
+            if (string.IsNullOrEmpty(pizzaToCreate.SmallImageUrl))
+            {
+                pizzaToCreate.SmallImageUrl = "https://drive.google.com/file/d/1KgTq5_fJ59wrEGi2DwfgSAwDtrot_won/view?usp=drive_link";
+                
+            }
+
+            if (string.IsNullOrEmpty(pizzaToCreate.LargeImageUrl))
+            {
+                pizzaToCreate.LargeImageUrl = "https://drive.google.com/file/d/1nAPT-7X3TPg3Y9cXEHE-CB4Amr4IhnZQ/view?usp=drive_link";
+            }
 
             var pizzaEntity = _mapper.Map<Pizza>(pizzaToCreate);
-
             if (pizzaEntity == null)
             {
                 throw new InvalidOperationException("Failed to map PizzaCreateDTO to Pizza.");
             }
 
-            pizzaEntity.Toppings = new List<Topping>(); 
 
-            foreach (var toppingId in pizzaToCreate.ToppingIds)
-            {
-                var toppingEntity = await _uow.ToppingRepository.GetByIdAsync(toppingId);
-                if (toppingEntity != null)
-                {
-                    pizzaEntity.Toppings.Add(toppingEntity);
-                }
-            }
+            var createdPizza = await _uow.PizzaRepository.CreatePizzaWithToppingsAsync(pizzaEntity, pizzaToCreate.ToppingIds);
 
-            await _uow.PizzaRepository.CreateAsync(pizzaEntity);
-            await _uow.SaveChangesAsync();
-
-            var pizzaDto = _mapper.Map<PizzaDTO>(pizzaEntity);
+            var pizzaDto = _mapper.Map<PizzaDTO>(createdPizza);
             return pizzaDto;
         }
         public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
@@ -148,6 +151,19 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             _uow.PizzaRepository.Delete(pizza);
             await _uow.SaveChangesAsync();
+
+            return _mapper.Map<PizzaDTO>(pizza);
+        }
+
+        public async Task<PizzaDTO> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId)
+        {
+            var pizza = await _uow.PizzaRepository.GetPizzaWithToppingsAsync(pizzaId);
+
+            var topping = await _uow.PizzaRepository.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
+            if (topping == null)
+            {
+                throw new NotFoundException($"Topping with ID {toppingId} not found on Pizza with ID {pizzaId}.");
+            }
 
             return _mapper.Map<PizzaDTO>(pizza);
         }

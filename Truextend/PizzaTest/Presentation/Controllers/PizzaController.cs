@@ -49,14 +49,6 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> UpdatePizzaAsync(Guid id, PizzaCreateDTO pizzaToUpdate)
-        {
-            var result = await _pizzaManager.UpdatePizzaAsync(id, pizzaToUpdate);
-            return Ok(result);
-        }
-
-        [HttpPut]
         [Route("{pizzaId}/toppings/{toppingId}")]
         public async Task<IActionResult> AddToppingToPizzaAsync([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
@@ -69,6 +61,18 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         public async Task<IActionResult> DeletePizza([FromRoute] Guid id)
         {
             var deletedPizza = await _pizzaManager.DeletePizzaAsync(id);
+            if (deletedPizza == null)
+            {
+                return NotFound();
+            }
+            return Ok(deletedPizza);
+        }
+
+        [HttpDelete]
+        [Route("{id}/toppings/{toppingId}")]
+        public async Task<IActionResult> DeleteToppingFromPizza([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
+        {
+            var deletedPizza = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
             if (deletedPizza == null)
             {
                 return NotFound();

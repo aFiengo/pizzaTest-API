@@ -10,6 +10,8 @@ namespace Truextend.PizzaTest.Data.Models
     public class Pizza : Entity
     {
         public string Name { get; set; }
+        public string SmallImageUrl { get; set; }
+        public string LargeImageUrl { get; set; }
         public virtual ICollection<Topping> Toppings { get; set; }
     }
 }
