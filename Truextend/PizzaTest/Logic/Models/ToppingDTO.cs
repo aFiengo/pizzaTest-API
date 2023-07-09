@@ -11,4 +11,8 @@ namespace Truextend.PizzaTest.Logic.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
+    public class ToppingNameDTO
+    {
+        public string Name { get; set; }
+    }
 }

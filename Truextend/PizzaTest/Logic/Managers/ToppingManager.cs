@@ -34,7 +34,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             var topping =  await _uow.ToppingRepository.GetByIdAsync(id);
             return _mapper.Map<ToppingDTO>(topping);
         }
-        public async Task<ToppingDTO> CreateAsync(ToppingDTO toppingToAdd)
+        public async Task<ToppingDTO> CreateAsync(ToppingNameDTO toppingToAdd)
         {
             var topping = _mapper.Map<Topping>(toppingToAdd);
             topping.Id = Guid.NewGuid();

@@ -7,7 +7,7 @@ using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Models;
 using Truextend.PizzaTest.Logic;
 using Truextend.PizzaTest.Logic.Managers.Interface;
-using Truextend.PizzaTest.Logic.Managers.Base;
+using Truextend.PizzaTest.Logic.Managers;
 using Microsoft.Extensions.FileProviders;
 using ServiceStack.Text;
 

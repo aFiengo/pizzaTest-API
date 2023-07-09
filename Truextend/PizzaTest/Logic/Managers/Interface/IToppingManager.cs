@@ -13,7 +13,7 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
     {
         Task<IEnumerable<ToppingDTO>> GetAllAsync();
         Task<ToppingDTO> GetByIdAsync(Guid id);
-        Task<ToppingDTO> CreateAsync(ToppingDTO toppingToAdd);
+        Task<ToppingDTO> CreateAsync(ToppingNameDTO toppingToAdd);
         Task<ToppingDTO> UpdateAsync(Guid id, ToppingDTO toppingToUpdate);
         Task<ToppingDTO> DeleteAsync(Guid id);
     }
