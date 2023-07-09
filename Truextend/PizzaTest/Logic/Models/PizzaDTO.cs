@@ -10,6 +10,7 @@ namespace Truextend.PizzaTest.Logic.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public IEnumerable<ToppingDTO> Toppings { get; set; }
     }
 
@@ -17,12 +18,11 @@ namespace Truextend.PizzaTest.Logic.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string SmallImageUrl { get; set; }
-        public string LargeImageUrl { get; set; }
     }
     public class PizzaCreateDTO
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public IEnumerable<Guid> ToppingIds { get; set; }
     }
 }

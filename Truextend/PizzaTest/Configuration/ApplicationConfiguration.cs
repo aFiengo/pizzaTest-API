@@ -22,5 +22,6 @@ namespace Truextend.PizzaTest.Configuration
                 DATABASE = _configuration.GetSection("ConnectionStrings").GetSection("PizzaDbConnection").Value
             };
         }
+        
     }
 }
