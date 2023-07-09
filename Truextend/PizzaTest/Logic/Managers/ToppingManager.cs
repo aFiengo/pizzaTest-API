@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Truextend.PizzaTest.Data.Models;
 using Truextend.PizzaTest.Data;
-using Truextend.PizzaTest.Logic.Managers.Base;
+using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using AutoMapper;
 using Truextend.PizzaTest.Logic.Models;
@@ -39,7 +39,9 @@ namespace Truextend.PizzaTest.Logic.Managers
             var topping = _mapper.Map<Topping>(toppingToAdd);
             topping.Id = Guid.NewGuid();
             var createdTopping = await _uow.ToppingRepository.CreateAsync(topping);
+            await _uow.SaveChangesAsync();
             return _mapper.Map<ToppingDTO>(createdTopping);
+
         }
         public async Task<ToppingDTO> UpdateAsync(Guid id, ToppingDTO toppingToUpdate)
         {
@@ -53,19 +55,24 @@ namespace Truextend.PizzaTest.Logic.Managers
             _mapper.Map(toppingToUpdate, existingTopping);
 
             var result = await _uow.ToppingRepository.UpdateAsync(existingTopping);
+            await _uow.SaveChangesAsync();
             return _mapper.Map<ToppingDTO>(result);
         }
-        public async Task<ToppingDTO> DeleteTopping(Guid id)
+        public async Task<ToppingDTO> DeleteAsync(Guid id)
         {
-            var topping = await _uow.ToppingRepository.Delete(id);
             if (id == Guid.Empty)
             {
                 throw new ArgumentException("Invalid ID.");
             }
+
+            var topping = await _uow.ToppingRepository.GetByIdAsync(id);
             if (topping == null)
             {
                 throw new NotFoundException($"Topping with ID {id} not found.");
             }
+
+            await _uow.ToppingRepository.DeleteAsync(topping);
+            await _uow.SaveChangesAsync();
 
             return _mapper.Map<ToppingDTO>(topping);
         }

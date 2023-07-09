@@ -82,6 +82,5 @@ namespace Truextend.PizzaTest.Data.Repository.Base
 
             return entity;
         }
-
     }
 }

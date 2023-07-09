@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Truextend.PizzaTest.Logic.Exceptions;
 using Truextend.PizzaTest.Data;
 using Truextend.PizzaTest.Data.Models;
-using Truextend.PizzaTest.Logic.Managers.Base;
+using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
 using Microsoft.AspNetCore.Mvc;
