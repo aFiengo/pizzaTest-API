@@ -12,6 +12,7 @@ namespace Truextend.PizzaTest.Data.Models
         public string Name { get; set; }
         public string SmallImageUrl { get; set; }
         public string LargeImageUrl { get; set; }
+        public string Description { get; set; }
         public virtual ICollection<Topping> Toppings { get; set; }
     }
 }

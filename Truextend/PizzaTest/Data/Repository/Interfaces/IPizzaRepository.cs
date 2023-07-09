@@ -12,9 +12,6 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
     {
         Task<Pizza>AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<Topping>> GetToppingsForPizzaAsync(Guid pizzaId);
-        Task<Pizza> GetPizzaWithToppingsAsync(Guid id);
-        void Delete(Pizza pizza);
-        Task<Pizza> CreatePizzaWithToppingsAsync(Pizza pizza, IEnumerable<Guid> toppingIds);
         Task<Pizza> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId);
     }
 }

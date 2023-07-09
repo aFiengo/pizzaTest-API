@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -50,6 +51,37 @@ namespace Truextend.PizzaTest.Data.Repository.Base
             await dbContext.SaveChangesAsync();
             return entity;
         }
-        
+        public async Task<T> DeleteAsync(T entity)
+        {
+            Type entityType = typeof(T);
+
+            var navigationProperties = dbContext.Model.FindEntityType(entityType)
+                .GetNavigations()
+                .Where(n => !n.ForeignKey.IsOwnership)
+                .ToList();
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                var propertyName = navigationProperty.Name;
+                var relatedEntities = dbContext.Entry(entity)
+                    .Collection(propertyName)
+                    .CurrentValue;
+
+                if (relatedEntities is IEnumerable entities)
+                {
+                    dbContext.RemoveRange(entities);
+                }
+                else if (relatedEntities is T relatedEntity)
+                {
+                    dbContext.Remove(relatedEntity);
+                }
+            }
+
+            dbContext.Set<T>().Remove(entity);
+            await dbContext.SaveChangesAsync();
+
+            return entity;
+        }
+
     }
 }

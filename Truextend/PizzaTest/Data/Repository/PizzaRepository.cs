@@ -37,22 +37,6 @@ namespace Truextend.PizzaTest.Data.Repository
 
             return pizza.Toppings;
         }
-        public async Task<Pizza> CreatePizzaWithToppingsAsync(Pizza pizza, IEnumerable<Guid> toppingIds)
-        {
-            foreach (var toppingId in toppingIds)
-            {
-                var topping = await dbContext.Topping.FindAsync(toppingId);
-                if (topping != null)
-                {
-                    pizza.Toppings.Add(topping);
-                }
-            }
-
-            dbContext.Pizza.Add(pizza);
-            await dbContext.SaveChangesAsync();
-
-            return pizza;
-        }
         public async Task<Pizza> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
             var pizza = await dbContext.Pizza
@@ -78,18 +62,6 @@ namespace Truextend.PizzaTest.Data.Repository
             await dbContext.SaveChangesAsync();
 
             return pizza;
-        }
-      
-        public async Task<Pizza> GetPizzaWithToppingsAsync(Guid id)
-        {
-            var pizza = await dbContext.Pizza
-                .Include(p => p.Toppings)
-                .FirstOrDefaultAsync(p => p.Id == id);
-            return pizza;
-        }
-        public void Delete(Pizza pizza)
-        {
-            dbContext.Pizza.Remove(pizza);
         }
         public async Task<Pizza> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId)
         {
