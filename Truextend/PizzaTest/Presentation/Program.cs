@@ -38,6 +38,7 @@ builder.Services.AddTransient<IApplicationConfiguration, ApplicationConfiguratio
 builder.Services.Configure<PizzaDefaultSettings>(builder.Configuration.GetSection("PizzaDefaultSettings"));
 var pizzaDefaultSettings = builder.Configuration.GetSection("PizzaDefaultSettings").Get<PizzaDefaultSettings>();
 builder.Services.AddSingleton(pizzaDefaultSettings);
+
 //insert managers
 builder.Services.AddTransient<IPizzaManager, PizzaManager>();
 builder.Services.AddTransient<IToppingManager, ToppingManager>();
@@ -64,7 +65,13 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
+    });
+}
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
@@ -73,13 +80,7 @@ app.UseRouting();
 
 app.UseCors("AllowAnyOrigin");
 app.UseAuthorization();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
-    });
-}
+
 app.MapControllers();
 
 app.Run();

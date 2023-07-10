@@ -43,8 +43,7 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{pizzaId}/toppings/{toppingId}")]
         public async Task<IActionResult> DeleteToppingFromPizza([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
-            try
-            {
+           
                 var isToppingDeleted = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
                 string successMessage = "Successfully deleted";
                 string errorMessage = "Failed to delete";
@@ -56,25 +55,8 @@ namespace Truextend.PizzaTest.Presentation.Controllers
                 {
                     return BadRequest(new MiddlewareResponse<bool>(isToppingDeleted, errorMessage));
                 }
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+           
         }
 
-        [HttpGet]
-        public IActionResult GetControllers()
-        {
-            var baseControllerType = typeof(BasePizzaTestController<PizzaDTO>);
-            var controllers = GetType().GetTypeInfo().Assembly.GetTypes()
-                .Where(type => type.IsSubclassOf(baseControllerType) || type == baseControllerType)
-                .OrderBy(type => type == baseControllerType ? 0 : 1)
-                .ThenBy(type => type.Name)
-                .ToList();
-
-            // Retornar la lista de controladores
-            return Ok(controllers);
-        }
     }
 }
