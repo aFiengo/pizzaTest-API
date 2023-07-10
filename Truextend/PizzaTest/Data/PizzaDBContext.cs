@@ -12,11 +12,11 @@ namespace Truextend.PizzaTest.Data
 {
     public class PizzaDbContext : DbContext
     {
-        private readonly IApplicationConfiguration _config;
-        public PizzaDbContext(IApplicationConfiguration config)
+        public PizzaDbContext(IApplicationConfiguration applicationConfiguration)
         {
-            _config = config;
+            _applicationConfiguration = applicationConfiguration;
         }
+        private readonly IApplicationConfiguration _applicationConfiguration;
         public DbSet<Pizza> Pizza { get; set; }
 
         public DbSet<Topping> Topping { get; set; }
@@ -24,7 +24,7 @@ namespace Truextend.PizzaTest.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySQL(_config.GetDatabaseConnectionString().DATABASE);
+            optionsBuilder.UseMySQL(_applicationConfiguration.GetDatabaseConnectionString().DATABASE);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
@@ -43,9 +43,6 @@ namespace Truextend.PizzaTest.Data
                     .HasForeignKey("PizzaId")
                 );
         }
-        public PizzaDefaultSettings DefaultSettings()
-        {
-            return _config.GetImgUrlString();
-        }
+        
     }
 }

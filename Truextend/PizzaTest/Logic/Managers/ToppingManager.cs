@@ -58,7 +58,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             await _uow.SaveChangesAsync();
             return _mapper.Map<ToppingDTO>(result);
         }
-        public async Task<ToppingDTO> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             if (id == Guid.Empty)
             {
@@ -74,7 +74,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             await _uow.ToppingRepository.DeleteAsync(topping);
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<ToppingDTO>(topping);
+            return await _uow.ToppingRepository.GetByIdAsync(id) == null;
         }
     }
 }

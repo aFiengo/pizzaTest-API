@@ -13,6 +13,7 @@ using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Truextend.PizzaTest.Configuration.Models;
 
 namespace Truextend.PizzaTest.Logic.Managers
 {
@@ -20,11 +21,13 @@ namespace Truextend.PizzaTest.Logic.Managers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
+        private readonly PizzaDefaultSettings _defaultSettings;
 
-        public PizzaManager(IUnitOfWork uow, IMapper mapper)
+        public PizzaManager(IUnitOfWork uow, IMapper mapper, PizzaDefaultSettings defaultSettings)
         {
             _uow = uow;
             _mapper = mapper;
+            _defaultSettings = defaultSettings;
         }
         public async Task<IEnumerable<PizzaDTO>> GetAllAsync()
         {
@@ -48,6 +51,10 @@ namespace Truextend.PizzaTest.Logic.Managers
                 throw new InvalidOperationException("Failed to map PizzaCreateDTO to Pizza.");
             }
 
+            pizzaEntity.Id= Guid.NewGuid();
+            pizzaEntity.SmallImageUrl = _defaultSettings.DefaultSmallImageUrl;
+            pizzaEntity.LargeImageUrl = _defaultSettings.DefaultLargeImageUrl;
+
             var createdPizza = await _uow.PizzaRepository.CreateAsync(pizzaEntity);
 
             await _uow.SaveChangesAsync();
@@ -55,7 +62,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             var pizzaDto = _mapper.Map<PizzaDTO>(createdPizza);
             return pizzaDto;
         }
-        public async Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
+        public async Task<Dictionary<string, object>> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId)
         {
             var pizza = await _uow.PizzaRepository.GetByIdAsync(pizzaId);
             if (pizza == null)
@@ -73,7 +80,13 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             await _uow.SaveChangesAsync();
 
-            return _mapper.Map<PizzaDTO>(pizza);
+            var result = new Dictionary<string, object>
+            {
+                { "Pizza", _mapper.Map<PizzaDTO>(pizza) },
+                { "Topping", _mapper.Map<ToppingDTO>(topping) }
+            };
+
+            return result;
         }
         public async Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid id)
         {

@@ -11,7 +11,7 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
 {
     public interface IPizzaManager : IGenericManager<PizzaDTO>
     {
-        Task<PizzaDTO> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
+        Task<Dictionary<string, object>> AddToppingToPizzaAsync(Guid pizzaId, Guid toppingId);
         Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid pizzaId);
         Task<bool> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId);
     }

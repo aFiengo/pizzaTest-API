@@ -8,10 +8,10 @@ namespace Truextend.PizzaTest.Presentation.Controllers
 {
     [Produces("application/json")]
     [Route("api/toppings")]
-    public class ToppingController : ControllerBase
+    public class ToppingController : BasePizzaTestController<ToppingDTO>
     {
         private readonly IToppingManager _toppingManager;
-        public ToppingController(IToppingManager toppingManager)
+        public ToppingController(IToppingManager toppingManager) : base(toppingManager) 
         {
             _toppingManager = toppingManager;
         }

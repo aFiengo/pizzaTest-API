@@ -10,9 +10,15 @@ using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Managers;
 using Microsoft.Extensions.FileProviders;
 using ServiceStack.Text;
+using Truextend.PizzaTest.Configuration.Models;
+using Truextend.PizzaTest.Configuration;
+using Truextend.PizzaTest.Presentation.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
@@ -28,12 +34,18 @@ builder.Services.AddDbContext<PizzaDbContext>(options =>
 {
     options.UseLazyLoadingProxies().UseMySQL(builder.Configuration.GetConnectionString("PizzaContextDb"));
 });
+builder.Services.AddTransient<IApplicationConfiguration, ApplicationConfiguration>();
+builder.Services.Configure<PizzaDefaultSettings>(builder.Configuration.GetSection("PizzaDefaultSettings"));
+var pizzaDefaultSettings = builder.Configuration.GetSection("PizzaDefaultSettings").Get<PizzaDefaultSettings>();
+builder.Services.AddSingleton(pizzaDefaultSettings);
 //insert managers
 builder.Services.AddTransient<IPizzaManager, PizzaManager>();
 builder.Services.AddTransient<IToppingManager, ToppingManager>();
+
 //
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -50,8 +62,17 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseCors("AllowAnyOrigin");
+app.UseAuthorization();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -59,12 +80,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
     });
 }
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors("AllowAnyOrigin");
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

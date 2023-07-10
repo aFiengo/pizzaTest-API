@@ -9,6 +9,6 @@ namespace Truextend.PizzaTest.Configuration.Models
     public interface IApplicationConfiguration
     {
         DatabaseConnectionString GetDatabaseConnectionString();
-        PizzaDefaultSettings GetImgUrlString();
+        PizzaDefaultSettings GetPizzaDefaultSettings();
     }
 }
