@@ -22,6 +22,14 @@ namespace Truextend.PizzaTest.Configuration
                 DATABASE = _configuration.GetSection("ConnectionStrings").GetSection("PizzaDbConnection").Value
             };
         }
-        
+        public PizzaDefaultSettings GetImgUrlString()
+        {
+            return new PizzaDefaultSettings()
+            {
+                DefaultSmallImageUrl = _configuration.GetSection("PizzaImgUrl").GetSection("DefaultSmallImageUrl").Value,
+                DefaultLargeImageUrl = _configuration.GetSection("PizzaImgUrl").GetSection("DefaultLargeImageUrl").Value
+            };
+        }
+
     }
 }

@@ -20,7 +20,7 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("")]
         public async Task<IActionResult> GetAllPizzasAsync()
         {
-            var result = await _pizzaManager.GetAllPizzaAsync();
+            var result = await _pizzaManager.GetAllAsync();
             return Ok(result);
         }
 
@@ -28,7 +28,7 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{id}")]
         public async Task<IActionResult> GetPizzaByIdAsync(Guid id)
         {
-            var result = await _pizzaManager.GetPizzaToppingsByIdAAsync(id);
+            var result = await _pizzaManager.GetByIdAsync(id);
             return Ok(result);
         }
 

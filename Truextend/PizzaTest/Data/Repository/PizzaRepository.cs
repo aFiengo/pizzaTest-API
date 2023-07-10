@@ -19,6 +19,7 @@ namespace Truextend.PizzaTest.Data.Repository
             return await dbContext.Pizza
                 .Include(p => p.Toppings)
                 .ToListAsync();
+
         }
         public async Task<Pizza> GetByIdAsync(Guid id)
         {
