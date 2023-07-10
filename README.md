@@ -18,18 +18,16 @@ The main objective of the API exercise is to
   - A topping
   - A pizza  
 
-## Technologies Used
+## Technologies & Design Patterns Used
 
 - .NET 6
-- EF Core 7
-- Database First
+- EF Core 7:
+  - Database First
 - Layered Architecture
-- OOP Design Patterns
+- Design Patterns:
   - Repository Pattern
   - Unit of Work
-  - Generics
   - Template Pattern
-  - Dependency Injection
 
 ## How to Use
 
