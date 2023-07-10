@@ -10,9 +10,10 @@ namespace Truextend.PizzaTest.Data.Repository.Base
 {
     public interface IRepository<T> where T : Entity
     {
-        Task<T> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(Guid id);
         Task<T> CreateAsync(T entity);
         Task<T> UpdateAsync(T entity);
+        Task<T> DeleteAsync(T entity);
     }
 }

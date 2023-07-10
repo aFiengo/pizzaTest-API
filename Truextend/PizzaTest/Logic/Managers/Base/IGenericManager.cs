@@ -8,9 +8,10 @@ namespace Truextend.PizzaTest.Logic.Managers.Base
 {
     public interface IGenericManager<T> where T : class
     {
+        Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(Guid id);
-        Task<IEnumerable<T>>GetAllAsync();
-        Task<T> CreateAsync(T entity);
-        Task<T> UpdateAsync(Guid id, T entity);
+        Task<T> CreateAsync(T item);
+        Task<T> UpdateAsync(Guid id, T item);
+        Task<bool> DeleteAsync(Guid itemId);
     }
 }

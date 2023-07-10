@@ -14,26 +14,7 @@ namespace Truextend.PizzaTest.Data.Repository
     public class ToppingRepository : Repository<Topping>, IToppingRepository
     {
         public ToppingRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
-        public async Task<Topping> Delete(Guid id)
-        {
-            var topping = await dbContext.Topping.FindAsync(id);
-            if (topping != null)
-            {
-                var pizzas = dbContext.Pizza
-                    .Include(p => p.Toppings)
-                    .Where(p => p.Toppings.Any(t => t.Id == id));
-
-                foreach (var pizza in pizzas)
-                {
-                    pizza.Toppings.Remove(topping);
-                }
-
-                dbContext.Topping.Remove(topping);
-
-                await dbContext.SaveChangesAsync();
-            }
-            return topping;
-        }
+       
 
     }
 }

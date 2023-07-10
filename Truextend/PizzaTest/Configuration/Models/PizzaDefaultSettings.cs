@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Truextend.PizzaTest.Configuration.Models
 {
-    public interface IApplicationConfiguration
+    public class PizzaDefaultSettings
     {
-        DatabaseConnectionString GetDatabaseConnectionString();
-        PizzaDefaultSettings GetPizzaDefaultSettings();
+        public string DefaultSmallImageUrl { get; set; }
+        public string DefaultLargeImageUrl { get; set; }
     }
 }
