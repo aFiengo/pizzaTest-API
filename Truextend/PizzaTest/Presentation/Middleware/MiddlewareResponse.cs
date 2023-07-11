@@ -3,7 +3,7 @@
     public class MiddlewareResponse<T>
     {
         public MiddlewareResponse() { }
-        public MiddlewareResponse(T data, string successMessage = null, string errorMessage = null)
+        public MiddlewareResponse(T data, string successMessage = "Succes", string errorMessage = "Error")
         {
             this.status = 200;
             this.data = data;
