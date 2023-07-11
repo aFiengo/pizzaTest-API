@@ -14,7 +14,12 @@ namespace Truextend.PizzaTest.Data.Repository
     public class ToppingRepository : Repository<Topping>, IToppingRepository
     {
         public ToppingRepository(PizzaDbContext pizzaDbContext) : base(pizzaDbContext) { }
-       
+        public async Task<Topping> GetPizzasWithToppingByIdAsync(Guid id)
+        {
+            return await dbContext.Topping
+                .Include(t => t.Pizzas)
+                .SingleOrDefaultAsync(t => t.Id == id);
+        }
 
     }
 }

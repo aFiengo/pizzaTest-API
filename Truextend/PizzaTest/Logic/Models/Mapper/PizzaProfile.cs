@@ -14,7 +14,6 @@ namespace Truextend.PizzaTest.Logic.Models.Mapper
         {
             this.CreateMap<Pizza, PizzaDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                //.ForMember(dest => dest.Toppings, opt => opt.MapFrom(src => src.Toppings))
                 .ReverseMap();
             this.CreateMap<Topping, ToppingDTO>().ReverseMap();
         }

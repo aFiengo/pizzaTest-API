@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Truextend.PizzaTest.Data.Models;
 using Truextend.PizzaTest.Data.Models.Base;
 
 namespace Truextend.PizzaTest.Data.Repository.Base

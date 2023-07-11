@@ -13,6 +13,8 @@ using ServiceStack.Text;
 using Truextend.PizzaTest.Configuration.Models;
 using Truextend.PizzaTest.Configuration;
 using Truextend.PizzaTest.Presentation.Middleware;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,8 +70,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Pizzeria API");
+        
     });
 }
 app.UseMiddleware<ExceptionHandlerMiddleware>();

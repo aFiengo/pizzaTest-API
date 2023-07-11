@@ -78,9 +78,9 @@ namespace Truextend.PizzaTest.Data.Repository.Base
             }
 
             dbContext.Set<T>().Remove(entity);
-            await dbContext.SaveChangesAsync();
+            var result = await dbContext.SaveChangesAsync();
 
-            return entity;
+            return result > 0 ? entity : null;
         }
     }
 }

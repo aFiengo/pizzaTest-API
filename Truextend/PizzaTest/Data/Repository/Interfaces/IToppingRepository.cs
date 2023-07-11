@@ -10,5 +10,6 @@ namespace Truextend.PizzaTest.Data.Repository.Interfaces
 {
     public interface IToppingRepository : IRepository<Topping>
     {
+        Task<Topping> GetPizzasWithToppingByIdAsync(Guid id);
     }
 }

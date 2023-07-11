@@ -65,16 +65,19 @@ namespace Truextend.PizzaTest.Logic.Managers
                 throw new ArgumentException("Invalid ID.");
             }
 
-            var topping = await _uow.ToppingRepository.GetByIdAsync(id);
+            var topping = await _uow.ToppingRepository.GetPizzasWithToppingByIdAsync(id);
             if (topping == null)
             {
                 throw new NotFoundException($"Topping with ID {id} not found.");
             }
-
+            if (topping.Pizzas.Count > 1)
+            {
+                return false;
+            }
             await _uow.ToppingRepository.DeleteAsync(topping);
             await _uow.SaveChangesAsync();
 
-            return await _uow.ToppingRepository.GetByIdAsync(id) == null;
+            return true;
         }
     }
 }

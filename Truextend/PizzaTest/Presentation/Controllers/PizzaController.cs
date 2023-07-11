@@ -7,6 +7,7 @@ using Truextend.PizzaTest.Logic.Models;
 using Truextend.PizzaTest.Presentation.Controllers.Base;
 using Truextend.PizzaTest.Presentation.Middleware;
 using static ServiceStack.LicenseUtils;
+using Microsoft.OpenApi;
 
 namespace Truextend.PizzaTest.Presentation.Controllers
 {
@@ -62,19 +63,22 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{pizzaId}/toppings/{toppingId}")]
         public async Task<IActionResult> DeleteToppingFromPizza([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
-           
-                var isToppingDeleted = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
-                string successMessage = "Successfully deleted";
-                string errorMessage = "Failed to delete";
-                if (isToppingDeleted)
-                {
-                    return Ok(new MiddlewareResponse<bool>(isToppingDeleted, successMessage));
-                }
-                else
-                {
-                    return BadRequest(new MiddlewareResponse<bool>(isToppingDeleted, errorMessage));
-                }
-           
+            var isToppingDeleted = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
+            string successMessage = "Successfully deleted";
+            string errorMessage = "Failed to delete";
+            if (isToppingDeleted)
+            {
+                return Ok(new MiddlewareResponse<bool>(isToppingDeleted, successMessage));
+            }
+            else if (!isToppingDeleted)
+            {
+                return NotFound(new MiddlewareResponse<bool>(false, "Pizza or topping not found"));
+            }
+            else
+            {
+                return BadRequest(new MiddlewareResponse<bool>(isToppingDeleted, errorMessage));
+            }
+
         }
 
     }

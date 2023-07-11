@@ -30,7 +30,7 @@ namespace Truextend.PizzaTest.Data
         {
             modelBuilder.Entity<Pizza>()
             .HasMany(p => p.Toppings)
-            .WithMany()
+            .WithMany(t => t.Pizzas)
             .UsingEntity<Dictionary<string, object>>(
                 "PizzaTopping",
                 j => j

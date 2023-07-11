@@ -83,17 +83,23 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
         [Route("{id}")]
         public virtual async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            bool isDeleted = await _classManager.DeleteAsync(id);
-            string successMessage = "Successfully deleted";
-            string errorMessage = "Failed to delete";
+            bool isDeleted;
+            try
+            {
+                isDeleted = await _classManager.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new MiddlewareResponse<string>(ex.Message));
+            }
 
             if (isDeleted)
             {
-                return Ok(new MiddlewareResponse<bool>(isDeleted, successMessage));
+                return Ok(new MiddlewareResponse<bool>(isDeleted, "Successfully deleted"));
             }
             else
             {
-                return BadRequest(new MiddlewareResponse<bool>(isDeleted, errorMessage));
+                return BadRequest(new MiddlewareResponse<bool>(isDeleted, "Failed to delete. Topping associated with many Pizzas"));
             }
         }
 

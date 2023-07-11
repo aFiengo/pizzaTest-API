@@ -10,6 +10,6 @@ namespace Truextend.PizzaTest.Data.Models
     public class Topping : Entity
     {
         public string Name { get; set; }
-
+        public virtual ICollection<Pizza> Pizzas { get; set; }
     }
 }

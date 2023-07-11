@@ -130,9 +130,6 @@ namespace Truextend.PizzaTest.Logic.Managers
                 throw new NotFoundException($"Pizza with ID {id} not found.");
             }
 
-            //pizza.Toppings.Clear();
-            //await _uow.SaveChangesAsync();
-
             await _uow.PizzaRepository.DeleteAsync(pizza);
             await _uow.SaveChangesAsync();
 
@@ -156,7 +153,7 @@ namespace Truextend.PizzaTest.Logic.Managers
             pizza.Toppings.Remove(topping);
             await _uow.SaveChangesAsync();
 
-            return await _uow.ToppingRepository.GetByIdAsync(toppingId) == null;
+            return true;
         }
 
     }
