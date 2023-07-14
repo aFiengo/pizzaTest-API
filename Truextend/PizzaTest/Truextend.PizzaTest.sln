@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic", "Logic\Logic.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configuration\Configuration.csproj", "{F6B2F5A3-97EA-4D89-99B1-A706B4C2B3AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaTest.UnitTests", "PizzaTest.UnitTests\PizzaTest.UnitTests.csproj", "{EB93D789-E7E5-4451-A9B1-CF16C627F04E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaTest.UnitTests", "Pizza.UnitTests\PizzaTest.UnitTests.csproj", "{48AD286D-7D0A-4906-89A6-208BD0DD7D66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{F6B2F5A3-97EA-4D89-99B1-A706B4C2B3AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6B2F5A3-97EA-4D89-99B1-A706B4C2B3AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6B2F5A3-97EA-4D89-99B1-A706B4C2B3AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB93D789-E7E5-4451-A9B1-CF16C627F04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB93D789-E7E5-4451-A9B1-CF16C627F04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB93D789-E7E5-4451-A9B1-CF16C627F04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB93D789-E7E5-4451-A9B1-CF16C627F04E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48AD286D-7D0A-4906-89A6-208BD0DD7D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48AD286D-7D0A-4906-89A6-208BD0DD7D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48AD286D-7D0A-4906-89A6-208BD0DD7D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48AD286D-7D0A-4906-89A6-208BD0DD7D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,9 +12,16 @@ namespace Truextend.PizzaTest.Data
 {
     public class PizzaDbContext : DbContext
     {
+        // Este constructor se utiliza en la aplicación
         public PizzaDbContext(IApplicationConfiguration applicationConfiguration)
         {
             _applicationConfiguration = applicationConfiguration;
+        }
+
+        // Este constructor se utiliza en tus pruebas
+        public PizzaDbContext(DbContextOptions<PizzaDbContext> options)
+            : base(options)
+        {
         }
         private readonly IApplicationConfiguration _applicationConfiguration;
         public DbSet<Pizza> Pizza { get; set; }
