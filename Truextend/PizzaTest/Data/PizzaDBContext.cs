@@ -14,27 +14,21 @@ namespace Truextend.PizzaTest.Data
 {
     public class PizzaDbContext : DbContext
     {
-        private readonly IApplicationConfiguration _applicationConfiguration;
-
-        public PizzaDbContext(DbContextOptions<PizzaDbContext> options, IApplicationConfiguration applicationConfiguration)
-            : base(options)
+        public PizzaDbContext(IApplicationConfiguration applicationConfiguration)
         {
             _applicationConfiguration = applicationConfiguration;
         }
-
+        private readonly IApplicationConfiguration _applicationConfiguration;
         public DbSet<Pizza> Pizza { get; set; }
 
         public DbSet<Topping> Topping { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseMySQL(_applicationConfiguration.GetDatabaseConnectionString().DATABASE);
-            }
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseMySQL(_applicationConfiguration.GetDatabaseConnectionString().DATABASE);
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Pizza>()
             .HasMany(p => p.Toppings)
@@ -50,6 +44,7 @@ namespace Truextend.PizzaTest.Data
                     .WithMany()
                     .HasForeignKey("PizzaId")
                 );
-        }   
+        }
     }
+
 }
