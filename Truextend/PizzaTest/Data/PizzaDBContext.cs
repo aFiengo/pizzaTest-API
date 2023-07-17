@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Truextend.PizzaTest.Configuration;
 using Truextend.PizzaTest.Configuration.Models;
 using Truextend.PizzaTest.Data.Models;
 
@@ -12,27 +14,26 @@ namespace Truextend.PizzaTest.Data
 {
     public class PizzaDbContext : DbContext
     {
-        // Este constructor se utiliza en la aplicación
-        public PizzaDbContext(IApplicationConfiguration applicationConfiguration)
+        private readonly IApplicationConfiguration _applicationConfiguration;
+
+        public PizzaDbContext(DbContextOptions<PizzaDbContext> options, IApplicationConfiguration applicationConfiguration)
+            : base(options)
         {
             _applicationConfiguration = applicationConfiguration;
         }
 
-        // Este constructor se utiliza en tus pruebas
-        public PizzaDbContext(DbContextOptions<PizzaDbContext> options)
-            : base(options)
-        {
-        }
-        private readonly IApplicationConfiguration _applicationConfiguration;
         public DbSet<Pizza> Pizza { get; set; }
 
         public DbSet<Topping> Topping { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySQL(_applicationConfiguration.GetDatabaseConnectionString().DATABASE);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseMySQL(_applicationConfiguration.GetDatabaseConnectionString().DATABASE);
+            }
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
             modelBuilder.Entity<Pizza>()
@@ -49,7 +50,6 @@ namespace Truextend.PizzaTest.Data
                     .WithMany()
                     .HasForeignKey("PizzaId")
                 );
-        }
-        
+        }   
     }
 }

@@ -10,27 +10,26 @@ using Moq;
 using Truextend.PizzaTest.Configuration.Models;
 using System.Xml.Linq;
 using Truextend.PizzaTest.Data.Repository;
+using FluentAssertions;
 
 namespace PizzaTest.UnitTests.PizzaRepositoryTests
 {
     [TestFixture]
     public class PizzaRepositoryTests
     {
-        private DbContextOptions<PizzaDbContext> _options;
-        private List<Pizza> _data;
-        private Mock<IApplicationConfiguration> _mockConfig;
+        private static DbContextOptions<PizzaDbContext> _options = new DbContextOptionsBuilder<PizzaDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDb")
+            .Options;
+        PizzaDbContext context;
 
-        [SetUp]
+        private PizzaDbContext _context;
+        private List<Pizza> _data;
+
+        [OneTimeSetUp]
         public void Setup()
         {
-            var databaseConnectionString = new DatabaseConnectionString { DATABASE = "DataSource=:memory:" };
-
-            _mockConfig = new Mock<IApplicationConfiguration>();
-            _mockConfig.Setup(config => config.GetDatabaseConnectionString()).Returns(databaseConnectionString);
-
-            _options = new DbContextOptionsBuilder<PizzaDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb")
-                .Options;
+            _context = new PizzaDbContext(_options);
+            _context.Database.EnsureCreated();
 
             _data = new List<Pizza>
         {
@@ -39,45 +38,41 @@ namespace PizzaTest.UnitTests.PizzaRepositoryTests
             new Pizza { Id = Guid.NewGuid(), Name = "Pizza 3" }
         };
 
-            using (var context = new PizzaDbContext(_options))
-            {
-                context.Pizza.AddRange(_data);
-                context.SaveChanges();
-            }
+            _context.Pizza.AddRange(_data);
+            _context.SaveChanges();
         }
+
         [Test]
         public async Task GetAllAsync_ReturnsAllPizzas()
         {
             // Arrange
-            PizzaRepository pizzaRepository;
-            using (var context = new PizzaDbContext(_options))
-            {
-                pizzaRepository = new PizzaRepository(context);
-            }
+            var repository = new PizzaRepository(_context);
 
             // Act
-            var result = await pizzaRepository.GetAllAsync();
+            var result = (await repository.GetAllAsync()).ToList();
 
             // Assert
-            Assert.That(result, Is.EqualTo(_data));
+            result.Should().BeEquivalentTo(_data);
         }
 
         [Test]
         public async Task GetByIdAsync_ReturnsCorrectPizza()
         {
             // Arrange
-            var targetPizza = _data[0];
-            PizzaRepository pizzaRepository;
-            using (var context = new PizzaDbContext(_options))
-            {
-                pizzaRepository = new PizzaRepository(context);
-            }
+            var pizzaToFind = _data[1];
+            var repository = new PizzaRepository(_context);
 
             // Act
-            var result = await pizzaRepository.GetByIdAsync(targetPizza.Id);
+            var result = await repository.GetByIdAsync(pizzaToFind.Id);
 
             // Assert
-            Assert.That(result, Is.EqualTo(targetPizza));
+            result.Should().BeEquivalentTo(pizzaToFind);
+        }
+
+        [OneTimeTearDown]
+        public void CleanUp()
+        {
+            _context.Database.EnsureDeleted();
         }
     }
 }
