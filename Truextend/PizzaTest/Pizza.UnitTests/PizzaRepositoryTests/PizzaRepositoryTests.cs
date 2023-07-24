@@ -8,11 +8,10 @@ using Truextend.PizzaTest.Data.Models;
 using Truextend.PizzaTest.Data;
 using Moq;
 using Truextend.PizzaTest.Configuration.Models;
-using System.Xml.Linq;
+
 using Truextend.PizzaTest.Data.Repository;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Truextend.PizzaTest.Logic.Exceptions;
+
 
 namespace Truextend.PizzaTest.UnitTests.PizzaRepositoryTests
 {
@@ -151,7 +150,6 @@ namespace Truextend.PizzaTest.UnitTests.PizzaRepositoryTests
             createdPizza.Name.Should().Be(newPizza.Name);
             createdPizza.Description.Should().Be(newPizza.Description);
 
-            // Verify that the pizza was added to the database
             var pizzaInDb = await _context.Pizza.FindAsync(createdPizza.Id);
             pizzaInDb.Should().NotBeNull();
             pizzaInDb.Name.Should().BeEquivalentTo(newPizza.Name);
