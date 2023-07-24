@@ -90,11 +90,12 @@ namespace Truextend.PizzaTest.Logic.Managers
         }
         public async Task<IEnumerable<ToppingDTO>> GetToppingsForPizzaAsync(Guid id)
         {
-            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
             if (id == Guid.Empty)
             {
                 throw new ArgumentException("Invalid ID.");
             }
+
+            var pizza = await _uow.PizzaRepository.GetByIdAsync(id);
             if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {id} not found.");
@@ -138,13 +139,16 @@ namespace Truextend.PizzaTest.Logic.Managers
 
         public async Task<bool> DeleteToppingFromPizzaAsync(Guid pizzaId, Guid toppingId)
         {
+            if (pizzaId == Guid.Empty || toppingId == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid ID.");
+            }
             var pizza = await _uow.PizzaRepository.GetByIdAsync(pizzaId);
             if (pizza == null)
             {
                 throw new NotFoundException($"Pizza with ID {pizzaId} not found.");
             }
-
-            var topping = pizza.Toppings.FirstOrDefault(t => t.Id == toppingId);
+            var topping = pizza.Toppings?.FirstOrDefault(t => t.Id == toppingId);
             if (topping == null)
             {
                 throw new NotFoundException($"Topping with ID {toppingId} not found on Pizza with ID {pizzaId}.");
