@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Truextend.PizzaTest.Logic.Models;
 using Truextend.PizzaTest.Presentation.Controllers;
 using Truextend.PizzaTest.Logic.Managers.Interface;
+using Truextend.PizzaTest.Logic.Exceptions;
 
 namespace Truextend.PizzaTest.UnitTests.ControllersTests.PizzaControllerTests
 {
@@ -205,6 +206,25 @@ namespace Truextend.PizzaTest.UnitTests.ControllersTests.PizzaControllerTests
         }
 
         [Test]
+        public async Task GetToppingsForPizzaAsync_WithInvalidPizzaId_ReturnsNotFound()
+        {
+            // Arrange
+            Guid testPizzaId = Guid.NewGuid();
+            _mockManager.Setup(repo => repo.GetToppingsForPizzaAsync(testPizzaId))
+                        .Throws(new NotFoundException($"Pizza with ID {testPizzaId} not found."));
+
+            // Act
+            var result = await _controller.GetToppingsForPizzaAsync(testPizzaId);
+            var notFoundResult = result as NotFoundObjectResult;
+            var middlewareResponse = notFoundResult?.Value as MiddlewareResponse<string>;
+
+            // Assert
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.AreEqual($"Pizza with ID {testPizzaId} not found.", middlewareResponse?.data);
+        }
+
+        [Test]
         public async Task AddToppingToPizza_WithValidIds_ReturnsOk()
         {
             // Arrange
@@ -231,6 +251,26 @@ namespace Truextend.PizzaTest.UnitTests.ControllersTests.PizzaControllerTests
         }
 
         [Test]
+        public async Task AddToppingToPizza_WithInvalidIds_ReturnsNotFound()
+        {
+            // Arrange
+            var testPizzaId = Guid.NewGuid();
+            var testToppingId = Guid.NewGuid();
+            _mockManager.Setup(repo => repo.AddToppingToPizzaAsync(testPizzaId, testToppingId))
+                        .Throws(new NotFoundException("Pizza or Topping not found."));
+
+            // Act
+            var result = await _controller.AddToppingToPizza(testPizzaId, testToppingId);
+            var notFoundResult = result as NotFoundObjectResult;
+            var middlewareResponse = notFoundResult?.Value as MiddlewareResponse<string>;
+
+            // Assert
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.AreEqual("Pizza or Topping not found.", middlewareResponse?.data);
+        }
+
+        [Test]
         public async Task DeleteToppingFromPizza_WithValidIds_ReturnsOk()
         {
             // Arrange
@@ -250,6 +290,27 @@ namespace Truextend.PizzaTest.UnitTests.ControllersTests.PizzaControllerTests
             Assert.AreEqual(StatusCodes.Status200OK, okResult.StatusCode);
             Assert.IsNotNull(isToppingDeleted);
             Assert.AreEqual(true, isToppingDeleted);
+        }
+
+        [Test]
+        public async Task DeleteToppingFromPizza_WithInvalidIds_ReturnsNotFound()
+        {
+            // Arrange
+            var testPizzaId = Guid.NewGuid();
+            var testToppingId = Guid.NewGuid();
+            _mockManager.Setup(repo => repo.DeleteToppingFromPizzaAsync(testPizzaId, testToppingId))
+                .Throws(new NotFoundException("Pizza or topping not found"));
+
+            // Act
+            var result = await _controller.DeleteToppingFromPizza(testPizzaId, testToppingId);
+            var notFoundResult = result as NotFoundObjectResult;
+            var middlewareResponse = notFoundResult?.Value as MiddlewareResponse<bool>;
+
+            // Assert
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+            Assert.AreEqual(false, middlewareResponse?.data);
+            Assert.AreEqual("Pizza or topping not found", middlewareResponse?.error.message);
         }
     }
 }

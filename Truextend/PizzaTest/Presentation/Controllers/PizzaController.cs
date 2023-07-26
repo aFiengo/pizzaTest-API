@@ -31,8 +31,19 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{id}/toppings")]
         public async Task<IActionResult> GetToppingsForPizzaAsync([FromRoute] Guid id)
         {
-            var toppings = await _pizzaManager.GetToppingsForPizzaAsync(id);
-            return Ok(new MiddlewareResponse<IEnumerable<ToppingDTO>>(toppings));
+            try
+            {
+                var toppings = await _pizzaManager.GetToppingsForPizzaAsync(id);
+                return Ok(new MiddlewareResponse<IEnumerable<ToppingDTO>>(toppings));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new MiddlewareResponse<string>(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new MiddlewareResponse<string>(ex.Message));
+            }
         }
 
         /// <summary>
@@ -47,8 +58,19 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{pizzaId}/toppings/{toppingId}")]
         public async Task<IActionResult> AddToppingToPizza([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
-            Dictionary<string, object> result = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
-            return Ok(new MiddlewareResponse<Dictionary<string, object>>(result));
+            try
+            {
+                Dictionary<string, object> result = await _pizzaManager.AddToppingToPizzaAsync(pizzaId, toppingId);
+                return Ok(new MiddlewareResponse<Dictionary<string, object>>(result));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new MiddlewareResponse<string>(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new MiddlewareResponse<string>(ex.Message));
+            }
         }
 
         /// <summary>
@@ -63,23 +85,27 @@ namespace Truextend.PizzaTest.Presentation.Controllers
         [Route("{pizzaId}/toppings/{toppingId}")]
         public async Task<IActionResult> DeleteToppingFromPizza([FromRoute] Guid pizzaId, [FromRoute] Guid toppingId)
         {
-            var isToppingDeleted = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
-            string successMessage = "Successfully deleted";
-            string errorMessage = "Failed to delete";
-            if (isToppingDeleted)
+            try
             {
-                return Ok(new MiddlewareResponse<bool>(isToppingDeleted, successMessage));
+                var isToppingDeleted = await _pizzaManager.DeleteToppingFromPizzaAsync(pizzaId, toppingId);
+                string successMessage = "Successfully deleted";
+                if (isToppingDeleted)
+                {
+                    return Ok(new MiddlewareResponse<bool>(isToppingDeleted, successMessage));
+                }
+                else
+                {
+                    return BadRequest(new MiddlewareResponse<bool>(isToppingDeleted, "Failed to delete"));
+                }
             }
-            else if (!isToppingDeleted)
+            catch (NotFoundException ex)
             {
-                return NotFound(new MiddlewareResponse<bool>(false, "Pizza or topping not found"));
+                return NotFound(new MiddlewareResponse<bool>(false, "Error", ex.Message));
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(new MiddlewareResponse<bool>(isToppingDeleted, errorMessage));
+                return BadRequest(new MiddlewareResponse<bool>(false, "Error", ex.Message));
             }
-
         }
-
     }
 }
