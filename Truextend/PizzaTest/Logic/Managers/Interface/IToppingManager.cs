@@ -12,6 +12,6 @@ namespace Truextend.PizzaTest.Logic.Managers.Interface
 {
     public interface IToppingManager : IGenericManager<ToppingDTO>
     {
-
+        Task<bool> IsToppingUsedInMultiplePizzas(Guid toppingId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Truextend.PizzaTest.Logic.Exceptions;
 using Truextend.PizzaTest.Logic.Managers.Base;
 using Truextend.PizzaTest.Presentation.Middleware;
 
@@ -47,8 +48,20 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
         [Route("")]
         public virtual async Task<IActionResult> AddItem([FromBody] T item)
         {
-            T status = await _classManager.CreateAsync(item);
-            return Ok(new MiddlewareResponse<T>(status));
+            if (item == null)
+            {
+                return BadRequest(new MiddlewareResponse<string>("Item is null"));
+            }
+
+            try
+            {
+                T status = await _classManager.CreateAsync(item);
+                return Ok(new MiddlewareResponse<T>(status));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new MiddlewareResponse<string>(ex.Message));
+            }
         }
 
         /// <summary>
@@ -62,8 +75,19 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
         [Route("{id}")]
         public virtual async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] T item)
         {
-            T status = await _classManager.UpdateAsync(id, item);
-            return Ok(new MiddlewareResponse<T>(status));
+            try
+            {
+                T status = await _classManager.UpdateAsync(id, item);
+                return Ok(new MiddlewareResponse<T>(status));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new MiddlewareResponse<string>(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new MiddlewareResponse<string>(ex.Message));
+            }
         }
 
         /// <summary>
@@ -81,6 +105,10 @@ namespace Truextend.PizzaTest.Presentation.Controllers.Base
             try
             {
                 isDeleted = await _classManager.DeleteAsync(id);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new MiddlewareResponse<string>(ex.Message));
             }
             catch (Exception ex)
             {

@@ -27,7 +27,6 @@ namespace Truextend.PizzaTest.UnitTests.ControllersTests.PizzaControllerTests
         private PizzaController _controller;
         private List<PizzaDTO> _pizzas;
         private PizzaDTO _pizzaDto;
-        private Pizza _pizza;
 
         [SetUp]
         public void Setup()

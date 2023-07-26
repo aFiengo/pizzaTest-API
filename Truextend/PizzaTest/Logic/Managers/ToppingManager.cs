@@ -79,5 +79,18 @@ namespace Truextend.PizzaTest.Logic.Managers
 
             return true;
         }
+        public async Task<bool> IsToppingUsedInMultiplePizzas(Guid toppingId)
+        {
+            var topping = await _uow.ToppingRepository.GetByIdAsync(toppingId);
+
+            if (topping == null)
+            {
+                throw new NotFoundException($"Topping with ID {toppingId} not found.");
+            }
+
+            var pizzasWithTopping = await _uow.PizzaRepository.GetToppingsForPizzaAsync(toppingId);
+
+            return pizzasWithTopping.Count() > 1;
+        }
     }
 }
