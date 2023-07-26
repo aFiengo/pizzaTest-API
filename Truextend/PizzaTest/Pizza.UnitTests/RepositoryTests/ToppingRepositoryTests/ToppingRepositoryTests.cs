@@ -11,10 +11,9 @@ using System.Xml.Linq;
 using Truextend.PizzaTest.Data.Repository;
 using FluentAssertions;
 
-using Truextend.PizzaTest.UnitTests.PizzaRepositoryTests;
 using Truextend.PizzaTest.Data;
 
-namespace Truextend.PizzaTest.UnitTests.ToppingRepositoryTests
+namespace Truextend.PizzaTest.UnitTests.RepositoryTests.ToppingRepositoryTests
 {
     [TestFixture]
     public class TestPizzaDbContext : PizzaDbContext
@@ -90,7 +89,7 @@ namespace Truextend.PizzaTest.UnitTests.ToppingRepositoryTests
             // Assert
             result.Should().BeEquivalentTo(toppingToFind);
         }
-        
+
         [Test]
         public async Task CreateAsync_CreatesNewTopping()
         {
@@ -126,7 +125,7 @@ namespace Truextend.PizzaTest.UnitTests.ToppingRepositoryTests
             var deletedTopping = await _context.Topping.FindAsync(toppingToDelete.Id);
             deletedTopping.Should().BeNull();
         }
-        
+
         [TearDown]
         public void TearDown()
         {

@@ -14,7 +14,7 @@ using Truextend.PizzaTest.Logic.Exceptions;
 using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Models;
 
-namespace PizzaTest.UnitTests.PizzaManagerTests
+namespace Truextend.PizzaTest.UnitTests.ManagesTests.PizzaManagerTests
 {
     [TestFixture]
     public class PizzaManagerTests

@@ -15,7 +15,7 @@ using Truextend.PizzaTest.Logic.Managers;
 using Truextend.PizzaTest.Logic.Managers.Interface;
 using Truextend.PizzaTest.Logic.Models;
 
-namespace PizzaTest.UnitTests.ToppingManagerTests
+namespace Truextend.PizzaTest.UnitTests.ManagesTests.ToppingManagerTests
 {
     [TestFixture]
     public class ToppingManagerTests

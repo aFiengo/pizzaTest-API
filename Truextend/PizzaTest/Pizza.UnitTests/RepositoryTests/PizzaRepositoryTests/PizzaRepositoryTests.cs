@@ -13,7 +13,7 @@ using Truextend.PizzaTest.Data.Repository;
 using FluentAssertions;
 
 
-namespace Truextend.PizzaTest.UnitTests.PizzaRepositoryTests
+namespace Truextend.PizzaTest.UnitTests.RepositoryTests.PizzaRepositoryTests
 {
     [TestFixture]
     public class TestPizzaDbContext : PizzaDbContext
@@ -47,9 +47,9 @@ namespace Truextend.PizzaTest.UnitTests.PizzaRepositoryTests
             mockAppConfiguration.Setup(ac => ac.GetDatabaseConnectionString())
                 .Returns(new ConnectionStrings { DATABASE = "TestDb" });
 
-            _appConfiguration = mockAppConfiguration.Object; 
+            _appConfiguration = mockAppConfiguration.Object;
 
-            _context = new TestPizzaDbContext(_appConfiguration); 
+            _context = new TestPizzaDbContext(_appConfiguration);
             _context.Database.EnsureCreated();
 
             _data = new List<Pizza>
